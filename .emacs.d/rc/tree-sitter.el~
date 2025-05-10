@@ -1,0 +1,19 @@
+;; Install grammars (run once per grammar)
+(dolist (lang '(c json python javascript rust))
+  (unless (treesit-language-available-p lang)
+    (treesit-install-language-grammar lang)))
+
+;; Prefer tree-sitter major modes if available
+(setq major-mode-remap-alist
+      '((rust-mode . rust-ts-mode)
+        (python-mode . python-ts-mode)
+        (js-mode . js-ts-mode)
+        (json-mode . json-ts-mode)
+        (c-mode . c-ts-mode)
+        ))
+
+;; Optional: treesit font-lock tweaks (highlighting)
+(setq treesit-font-lock-level 4)
+
+;; Optional: Use structural navigation with sexps
+(setq treesit-defun-type-regexp "function\\|method\\|class")
