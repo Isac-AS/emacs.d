@@ -22,3 +22,4 @@
 
 ;Ido mode
 (ido-mode 1)
+(which-key-mode)

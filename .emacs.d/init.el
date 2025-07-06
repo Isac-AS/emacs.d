@@ -2,9 +2,10 @@
 ; Custom file so that init.el does not get filled with things
 (setq custom-file "~/.emacs.d/emacs.custom.el")
 
-(load "~/.emacs.d/rc/defaults.el")
 (load "~/.emacs.d/rc/package.el")
+(load "~/.emacs.d/rc/defaults.el")
 (load "~/.emacs.d/rc/languages.el")
+(load "~/.emacs.d/rc/keybinds.el")
 
 ;; The default is 800 kilobytes.  Measured in bytes.
 (setq gc-cons-threshold (* 50 1000 1000))
