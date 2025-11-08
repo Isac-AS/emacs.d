@@ -1,5 +1,5 @@
 ;; Meow Config:
-(use-package 'meow)
+(package-install 'meow)
 (require 'meow)
 
 (defun meow-setup ()
@@ -84,8 +84,9 @@
    '("z" . meow-pop-selection)
    '("'" . repeat)
    '("<escape>" . ignore)))
+
 (meow-setup)
 (meow-global-mode 1)  ; Customize keys as per docs
 
 ;; Provide
-(provide 'isac-emacs-meow.el)
+(provide 'isac-emacs-meow)

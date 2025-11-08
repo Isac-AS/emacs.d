@@ -57,3 +57,7 @@
 (setq package-enable-at-startup t)
 
 (add-hook 'after-init-hook (lambda () (set-frame-name "home")))
+
+;; Make native compilation silent.
+(when (native-comp-available-p)
+  (setq native-comp-async-report-warnings-errors 'silent))

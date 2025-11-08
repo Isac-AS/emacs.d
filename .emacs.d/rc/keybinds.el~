@@ -1,4 +1,0 @@
-(use-package fzf
-  :bind (("C-c z" . fzf)))
-
-
