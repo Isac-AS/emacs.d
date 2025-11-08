@@ -1,23 +1,15 @@
 
-; Custom file so that init.el does not get filled with things
-(setq custom-file "~/.emacs.d/emacs.custom.el")
+;; Add modules and lisp to load path
+(dolist (path (list (expand-file-name "isac-emacs-modules" user-emacs-directory)
+                    (expand-file-name "isac-lisp" user-emacs-directory)))
+  (add-to-list 'load-path path))
 
-(load "~/.emacs.d/rc/package.el")
-(load "~/.emacs.d/rc/defaults.el")
-(load "~/.emacs.d/rc/languages.el")
-(load "~/.emacs.d/rc/keybinds.el")
+;; Load Modules
+(require 'isac-emacs-core)
+(require 'isac-emacs-essentials)
 
-;; The default is 800 kilobytes.  Measured in bytes.
-(setq gc-cons-threshold (* 50 1000 1000))
+(require 'isac-emacs-icons)
+(require 'isac-emacs-themes)
+(require 'isac-emacs-fonts)
 
-(defun is/display-startup-time ()
-  (message "Emacs loaded in %s with %d garbage collections."
-           (format "%.2f seconds"
-                   (float-time
-                     (time-subtract after-init-time before-init-time)))
-           gcs-done))
-
-(add-hook 'emacs-startup-hook #'is/display-startup-time)
-
-;; Make gc pauses faster by decreasing the threshold.
-(setq gc-cons-threshold (* 2 1000 1000))
+(require 'isac-emacs-meow)

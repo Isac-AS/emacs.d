@@ -20,6 +20,4 @@
 (global-display-line-numbers-mode t)
 (setq display-line-numbers-type 'relative)
 
-;Ido mode
-(ido-mode 1)
 (which-key-mode)
