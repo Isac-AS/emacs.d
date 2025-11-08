@@ -34,5 +34,10 @@
 (global-display-line-numbers-mode t)
 (setq display-line-numbers-type 'relative)
 
+;; Maybe move this to calendar / diary?
+(setq calendar-week-start-day 1)
+(setq calendar-latitude 28.1)
+(setq calendar-longitude -15.4)
+
 ;; Provide
 (provide 'isac-emacs-essentials)

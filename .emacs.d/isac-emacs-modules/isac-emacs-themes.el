@@ -9,6 +9,14 @@
   :custom
   (lin-face 'lin-cyan)
   :config
-  (lin-global-mode 1)
+  (lin-global-mode 1))
+
+;; Rainbow delimiters
+(use-package rainbow-delimiters
+  :ensure t
+  :hook (prog-mode . rainbow-delimiters-mode))
+
+(use-package highlight-parentheses
+  :ensure t)
 
 (provide 'isac-emacs-themes)
