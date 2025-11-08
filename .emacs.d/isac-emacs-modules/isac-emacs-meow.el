@@ -1,5 +1,5 @@
 ;; Meow Config:
-(package-install 'meow)
+(use-package meow)
 (require 'meow)
 
 (defun meow-setup ()

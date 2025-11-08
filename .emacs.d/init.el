@@ -13,3 +13,4 @@
 (require 'isac-emacs-fonts)
 
 (require 'isac-emacs-meow)
+(require 'isac-emacs-treesit)

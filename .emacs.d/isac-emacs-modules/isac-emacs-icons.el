@@ -9,5 +9,9 @@
   :custom
   (all-the-icons-scale-factor 1.1))
 
+
+(use-package nerd-icons-dired)
+(add-hook 'dired-mode-hook #'nerd-icons-dired-mode)
+
 ;;; Provide
 (provide 'isac-emacs-icons)
