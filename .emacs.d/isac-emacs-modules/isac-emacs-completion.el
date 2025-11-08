@@ -25,9 +25,7 @@
   :config
   (marginalia-mode))
 
-
 ;; Embark
-
 (use-package embark
   :ensure t
 
@@ -61,12 +59,34 @@
                  nil
                  (window-parameters (mode-line-format . none)))))
 
+;; Consult users will also want the embark-consult package.
+(use-package embark-consult
+  :ensure t ; only need to install it, embark loads it after consult if found
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))
+
+;; Consult
+(use-package consult)
+
+(use-package corfu
+  :ensure t
+  :custom
+  (corfu-auto t)
+  (corfu-cycle t)
+  (corfu-auto-delay 0.1)
+  (corfu-auto-prefix 2)
+  (corfu-preselect-first nil)
+  :init
+  (global-corfu-mode)
+  :bind
+  (:map corfu-map
+        ("C-j" . corfu-next) ; Avoid TAB for xah-fly-keys/Meow compatibility
+        ("C-k" . corfu-previous)
+        ("RET" . corfu-complete)))
 
 ;; Persist history over Emacs restarts. Vertico sorts by history position.
 (use-package savehist
   :init
   (savehist-mode))
-
-
 
 (provide 'isac-emacs-completion)
