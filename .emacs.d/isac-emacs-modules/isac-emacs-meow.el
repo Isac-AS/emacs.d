@@ -2,11 +2,44 @@
 (use-package meow)
 (require 'meow)
 
+(use-package avy)
+
+(keymap-global-set "M-o" 'avy-goto-char-timer)
+(keymap-global-set "M-p" 'pop-global-mark)
+ 
 (defun meow-setup ()
-  (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
+  ;; ---------------------- ;;
+  ;;       Thing table      ;;
+  ;; ---------------------- ;;
+  (meow-thing-register 'angle
+		       '(pair ("<") (">"))
+		       '(pair ("<") (">")))
+
+  (setq meow-char-thing-table
+	'((?f . round)
+	  (?d . square)
+	  (?s . curly)
+	  (?a . angle)
+	  (?r . string)
+	  (?v . paragraph)
+	  (?c . line)
+	  (?x . buffer)))
+  
   (meow-motion-define-key
-   '("j" . meow-next)
-   '("k" . meow-prev)
+   '("k" . meow-next)
+   '("i" . meow-prev)
+
+   ;; Window management
+   '("/" . windmove-left)
+   '("|" . windmove-down)
+   '("\\" . windmove-right)
+   '("^" . windmove-up)
+
+   '("%" . delete-other-windows)
+   '("~" . delete-window)
+   '("`" . split-window-vertically)
+   '("&" . split-window-horizontally)
+
    '("<escape>" . ignore))
   (meow-leader-define-key
    ;; Use SPC (0-9) for digit arguments.
@@ -21,8 +54,12 @@
    '("9" . meow-digit-argument)
    '("0" . meow-digit-argument)
    '("/" . meow-keypad-describe-key)
-   '("?" . meow-cheatsheet))
+   '("?" . meow-cheatsheet)
+   '("a" . "M-x"))
+
+  
   (meow-normal-define-key
+   ;; Expansion
    '("0" . meow-expand-0)
    '("9" . meow-expand-9)
    '("8" . meow-expand-8)
@@ -34,59 +71,117 @@
    '("2" . meow-expand-2)
    '("1" . meow-expand-1)
    '("-" . negative-argument)
-   '(";" . meow-reverse)
+   '("'" . meow-reverse)
+
+   ;; Movement
+   '("i" . meow-prev)
+   '("k" . meow-next)
+   '("j" . meow-left)
+   '("l" . meow-right)
+
+   '("y" . meow-search)
+   '("Y" . meow-visit)
+
+   ;; Expansion
+   '("I" . meow-prev-expand)
+   '("K" . meow-next-expand)
+   '("J" . meow-left-expand)
+   '("L" . meow-right-expand)
+
+   '("u" . meow-back-word)
+   '("U" . meow-back-symbol)
+   '("o" . meow-next-word)
+   '("O" . meow-next-symbol)
+
+   '("a" . meow-mark-word)
+   '("A" . meow-mark-symbol)
+   '("s" . meow-line)
+   '("S" . meow-goto-line)
+   '("w" . meow-block)
+   '("q" . meow-join)
+   '("g" . meow-grab)
+   '("G" . meow-pop-grab)
+   '("m" . meow-swap-grab)
+   '("M" . meow-sync-grab)
+   '("p" . meow-cancel-selection)
+   '("P" . meow-pop-selection)
+
+   '("x" . meow-till)
+   '("z" . meow-find)
+
+   ;; Bounds
    '("," . meow-inner-of-thing)
    '("." . meow-bounds-of-thing)
    '("<" . meow-beginning-of-thing)
    '(">" . meow-end-of-thing)
-   '("a" . meow-append)
-   '("A" . meow-open-below)
-   '("b" . meow-back-word)
-   '("B" . meow-back-symbol)
-   '("c" . meow-change)
-   '("d" . meow-delete)
-   '("D" . meow-backward-delete)
-   '("e" . meow-next-word)
-   '("E" . meow-next-symbol)
-   '("f" . meow-find)
-   '("g" . meow-cancel-selection)
-   '("G" . meow-grab)
-   '("h" . meow-left)
-   '("H" . meow-left-expand)
-   '("i" . meow-insert)
-   '("I" . meow-open-above)
-   '("j" . meow-next)
-   '("J" . meow-next-expand)
-   '("k" . meow-prev)
-   '("K" . meow-prev-expand)
-   '("l" . meow-right)
-   '("L" . meow-right-expand)
-   '("m" . meow-join)
-   '("n" . meow-search)
-   '("o" . meow-block)
-   '("O" . meow-to-block)
-   '("p" . meow-yank)
-   '("q" . meow-quit)
-   '("Q" . meow-goto-line)
-   '("r" . meow-replace)
-   '("R" . meow-swap-grab)
-   '("s" . meow-kill)
-   '("t" . meow-till)
-   '("u" . meow-undo)
-   '("U" . meow-undo-in-selection)
-   '("v" . meow-visit)
-   '("w" . meow-mark-word)
-   '("W" . meow-mark-symbol)
-   '("x" . meow-line)
-   '("X" . meow-goto-line)
-   '("y" . meow-save)
-   '("Y" . meow-sync-grab)
-   '("z" . meow-pop-selection)
-   '("'" . repeat)
+
+   ;; Editing
+   '("d" . meow-kill)
+   '("f" . meow-change)
+   '("t" . meow-delete)
+   '("c" . meow-save)
+   '("v" . meow-yank)
+   '("V" . meow-yank-pop)
+
+   '("e" . meow-insert)
+   '("E" . meow-open-above)
+   '("r" . meow-append)
+   '("R" . meow-open-below)
+
+   '("h" . undo-only)
+   '("H" . undo-redo)
+
+   '("b" . open-line)
+   '("B" . split-line)
+
+   '("[" . indent-rigidly-left-to-tab-stop)
+   '("]" . indent-rigidly-right-to-tab-stop)
+
+   ;; Prefix "n"
+   '("nf" . meow-comment)
+   '("nt" . meow-start-kmacro-or-insert-counter)
+   '("nr" . meow-start-kmacro)
+   '("ne" . meow-end-or-call-kmacro)
+   '("nn" . '(insert-char #x0000F1))
+   ;; ...etc
+
+   ;; Prefix ";"
+   '(";f" . save-buffer)
+   '(";F" . save-some-buffers)
+   '(";d" . meow-query-replace-regexp)
+   ;; ... etc
+
+   ;; Frequently used commands
+   '("F" . meow-replace)
+   '("D" . meow-mark-symbol)
+   
+   ;; Window management
+   '("/" . windmove-left)
+   '("|" . windmove-down)
+   '("\\" . windmove-right)
+   '("^" . windmove-up)
+
+   '("%" . delete-other-windows)
+   '("~" . delete-window)
+   '("`" . split-window-vertically)
+   '("&" . split-window-horizontally)
+
+   ;; Ignore escape
    '("<escape>" . ignore)))
 
 (meow-setup)
 (meow-global-mode 1)  ; Customize keys as per docs
+
+;; Other keymaps (user defined space)
+(keymap-global-set "C-c j" 'avy-goto-char-timer)
+
+(keymap-global-set "C-c x" 'meow-clipboard-kill)
+(keymap-global-set "C-c c" 'meow-clipboard-save)
+(keymap-global-set "C-c v" 'meow-clipboard-yank)
+
+(keymap-global-set "C-c f" 'consult-buffer)
+;; Figure out something to insert spanish characters
+;; (insert-char #x0000F1)
 
 ;; Provide
 (provide 'isac-emacs-meow)

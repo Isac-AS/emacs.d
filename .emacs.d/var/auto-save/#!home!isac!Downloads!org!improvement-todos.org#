@@ -1,0 +1,94 @@
+* Improvement Tasks
+** IN-PROGRESS [#A] [Window Management] Read Emacs window management almanac
+- State "IN-PROGRESS" from "TODO"       [2025-10-29 Wed 11:19] \\
+  Started reading the blog post
+:Created: <2025-10-29 Wed 07:54>
+1. Read blog post [[https://karthinks.com/software/emacs-window-management-almanac/][Blog post link]]
+2. Try and include the window management in meow
+** TODO [#A] Update meow config and use Avy
+:Created: <2025-10-29 Wed 07:53>
+1. Use ergonomic approach
+2. Learn how meow works internally
+3. Include window management
+4. [[https://karthinks.com/software/avy-can-do-anything/][Read avy can do anything]] and implement the corresponding system
+5. It is crucial to be confortable and move around fast
+** TODO [#A] [Read Org] Improve moving around in big org files
+:Created: <2025-10-29 Wed 08:07>
+Weird indenting when doing numbered lists (perhaps I am doing it wrong and has some syntax)
+Essentially read org manual
+[[https://emacsdocs.org/docs/org/The-Org-Manual][Org Manual link]]
+** TODO [#A] [Read Magit] Learn how to use Magit
+:Created: <2025-10-29 Wed 08:10>
+Read Magit user manual. [[https://emacsdocs.org/docs/magit/Top][Link]]
+** TODO [#A] [Read Eglot] Learn better how eglot is implemented
+:Created: <2025-10-29 Wed 08:06>
+Read eglot documentation and figure some more things out
+Try use something like [[https://github.com/manateelazycat/lsp-bridge][LSP Bridge]].
+** TODO [#A] [Read Treesitter] Learn how emacs treesitter works and implement it
+:Created: <2025-10-29 Wed 08:05>
+Try look under the hood at how treesitter does things
+** TODO [#B] Look at better completion (Ivy)
+:Created: <2025-10-29 Wed 07:55>
+:PROPERTIES:
+:Dependencies: [[https://kristofferbalintona.me/][Kristoffer Balintona blog]], [[https://kristofferbalintona.me/posts/202504050923/][Updated completion Article]]  ,[[https://kristofferbalintona.me/posts/202202211546/][Vertico, Marginalia, All-the-icons-completion, and Orderless]]
+:END:
+Investigate if ivy is that much better than fido
+Look at [[https://kristofferbalintona.me/][Kristoffer Balintona blog]]. 
+** TODO [#B] Improve coloring scheme
+:Created: <2025-10-29 Wed 07:56>
+1. Change rainbow delimiters colors for catppuccin
+2. Try create a small project and see if the coloring changes with treesitter/elgot
+** TODO [#B] Look for and implement helix pickers
+:Created: <2025-10-29 Wed 07:57>
+- Do I want a file preview?
+- Try and open file in side by side window
+Pickers:
+1. Find file in project
+2. Find file in current directory (could be done with dired jump and C-s)
+   /Open file picker at current buffer's directory/
+3. Switch between opened buffers (switch buffer)
+   /Open buffer picker/
+4. Git changes (probably already available with Magit)
+   /Open changed file picker/
+5. Project diagnostics (requires LSP)
+   /Open workspace diagnostic picker/
+6. File diagnostics (requires LSP)
+   /Open diagnostic picker/
+7. Methods/functions in file (requires treesitter?)
+   /Open symbol picker/
+8. Symbols in workspace
+   /Open worspace symbol picker/
+9. Search for text
+   (global grep, but improved with "The_silver_bullet" / ripgrep / dumbjump)
+   
+** TODO [#B] Install better quality of life packages
+:Created: <2025-10-29 Wed 08:10>
+This includes:
+1. Smartparens
+2. Something to improve org editing experience
+3. Bookmarks +
+4. Completion with ivy/counsel/selectrum... (keep looking for fast ones)
+** TODO [#B] Implment the following code actions inspired in Helix
+:Created: <2025-10-29 Wed 08:28>
+1. Show docs for item under cursor
+2. Rename symbol
+3. Select symbol references (should be meow w)
+4. Comment/uncomment selections
+5. Line comment/uncomment selections
+6. Goto definition
+7. Goto declaration
+8. Goto type definition
+9. Goto implementation
+10. Jump to a two-character label
+11. Replace mode (for enclosing things)
+12. Align (perhaps can be smarter than C-l)
+** TODO [#B] Read about Avy
+:Created: <2025-10-29 Wed 11:54>
+[[https://karthinks.com/software/avy-can-do-anything/][Avy can do anything]]
+** TODO [#C] Create shortcut system to use new prefixes and keypad
+:Created: <2025-10-29 Wed 08:16>
+After learning and determining the most used functions, create the following:
+1. "C-c" prefixes
+2. ";" prefixes
+3. "n" prefixes
+4. Create fancy prefix keyboard document with the layouts like the one that appears for meow

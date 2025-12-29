@@ -15,6 +15,8 @@
 (require 'isac-emacs-fonts)
 
 ;; Keys
+(require 'isac-emacs-parens)
+(require 'isac-emacs-avy)
 (require 'isac-emacs-meow)
 
 ;; Interaction improvements
@@ -22,3 +24,6 @@
 
 ;; Lang
 (require 'isac-emacs-treesit)
+
+;; Custom stuff
+(require 'isac-emacs-scroll)
