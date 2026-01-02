@@ -2,11 +2,12 @@
 (use-package meow)
 (require 'meow)
 
-(use-package avy)
+(defun isac-dired-up-behaviour ()
+  (interactive)
+  (if (eq major-mode 'dired-mode)
+      (dired-up-directory)
+    (windmove-up)))
 
-(keymap-global-set "M-o" 'avy-goto-char-timer)
-(keymap-global-set "M-p" 'pop-global-mark)
- 
 (defun meow-setup ()
   ;; ---------------------- ;;
   ;;       Thing table      ;;
@@ -33,8 +34,7 @@
    '("/" . windmove-left)
    '("|" . windmove-down)
    '("\\" . windmove-right)
-   '("^" . windmove-up)
-
+   '("^" . isac-dired-up-behaviour)
    '("%" . delete-other-windows)
    '("~" . delete-window)
    '("`" . split-window-vertically)
@@ -121,7 +121,12 @@
    '("t" . meow-delete)
    '("c" . meow-save)
    '("v" . meow-yank)
-   '("V" . meow-yank-pop)
+
+   '("X" . meow-clipboard-kill)
+   '("C" . meow-clipboard-save)
+   '("V" . meow-clipboard-yank)
+
+   '("Z" . meow-yank-pop)
 
    '("e" . meow-insert)
    '("E" . meow-open-above)
@@ -134,15 +139,27 @@
    '("b" . open-line)
    '("B" . split-line)
 
-   '("[" . indent-rigidly-left-to-tab-stop)
-   '("]" . indent-rigidly-right-to-tab-stop)
+
+   '("[" . sp-wrap-square)
+   '("]" . sp-wrap-square)
+   '("{" . sp-wrap-curly)
+   '("}" . sp-wrap-curly)
+   '("(" . sp-wrap-round)
+   '(")" . sp-wrap-round)
 
    ;; Prefix "n"
    '("nf" . meow-comment)
    '("nt" . meow-start-kmacro-or-insert-counter)
    '("nr" . meow-start-kmacro)
    '("ne" . meow-end-or-call-kmacro)
-   '("nn" . '(insert-char #x0000F1))
+   '("nnn" . (lambda () (interactive) (insert-char #x0000F1)))
+   '("nna" . (lambda () (interactive) (insert-char #x0000E1)))
+   '("nne" . (lambda () (interactive) (insert-char #x0000E9)))
+   '("nni" . (lambda () (interactive) (insert-char #x0000ED)))
+   '("nno" . (lambda () (interactive) (insert-char #x0000F3)))
+   '("nnu" . (lambda () (interactive) (insert-char #x0000FA)))
+   '("nn?" . (lambda () (interactive) (insert-char #x0000BF)))
+   '("nn!" . (lambda () (interactive) (insert-char #x0000A1)))
    ;; ...etc
 
    ;; Prefix ";"
@@ -174,10 +191,6 @@
 
 ;; Other keymaps (user defined space)
 (keymap-global-set "C-c j" 'avy-goto-char-timer)
-
-(keymap-global-set "C-c x" 'meow-clipboard-kill)
-(keymap-global-set "C-c c" 'meow-clipboard-save)
-(keymap-global-set "C-c v" 'meow-clipboard-yank)
 
 (keymap-global-set "C-c f" 'consult-buffer)
 ;; Figure out something to insert spanish characters
