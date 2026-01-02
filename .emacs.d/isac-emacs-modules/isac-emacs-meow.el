@@ -39,6 +39,7 @@
    '("~" . delete-window)
    '("`" . split-window-vertically)
    '("&" . split-window-horizontally)
+   '("*" . other-window-prefix)
 
    '("<escape>" . ignore))
   (meow-leader-define-key
@@ -182,19 +183,17 @@
    '("~" . delete-window)
    '("`" . split-window-vertically)
    '("&" . split-window-horizontally)
+   '("*" . other-window-prefix)
 
    ;; Ignore escape
    '("<escape>" . ignore)))
 
 (meow-setup)
-(meow-global-mode 1)  ; Customize keys as per docs
+(meow-global-mode 1)
 
 ;; Other keymaps (user defined space)
 (keymap-global-set "C-c j" 'avy-goto-char-timer)
-
-(keymap-global-set "C-c f" 'consult-buffer)
-;; Figure out something to insert spanish characters
-;; (insert-char #x0000F1)
+(keymap-global-set "C-c l" 'avy-goto-line)
 
 ;; Provide
 (provide 'isac-emacs-meow)

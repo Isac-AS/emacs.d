@@ -68,6 +68,7 @@
 ;; Consult
 (use-package consult)
 
+;; Corfu
 (use-package corfu
   :ensure t
   :custom
@@ -80,8 +81,8 @@
   (global-corfu-mode)
   :bind
   (:map corfu-map
-        ("C-j" . corfu-next) ; Avoid TAB for xah-fly-keys/Meow compatibility
-        ("C-k" . corfu-previous)
+        ("C-k" . corfu-next) ; Avoid TAB for xah-fly-keys/Meow compatibility
+        ("C-i" . corfu-previous)
         ("RET" . corfu-complete)))
 
 ;; Persist history over Emacs restarts. Vertico sorts by history position.

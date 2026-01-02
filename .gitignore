@@ -1,7 +1,8 @@
 
 .emacs.d/var/auto-save/\#\!home\!isac\!Downloads\!Telegram Desktop\!org\!improvement-todos.org\#
 .emacs.d/var/auto-save/sessions/12807-archlinux~
-.emacs.d/var/savehist.el
-.emacs.d/var/savehist.el
-.emacs.d/var/org/persist/index.eld
-.emacs.d/var/org/persist/gc-lock.eld
+.emacs.d/var
+.emacs.d/eln-cache
+.emacs.d/elpa
+.emacs.d/etc
+

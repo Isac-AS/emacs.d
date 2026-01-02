@@ -11,4 +11,5 @@
 
 (setf (alist-get ?. avy-dispatch-alist) 'avy-action-embark)
 
+;; Provide
 (provide 'isac-emacs-avy)

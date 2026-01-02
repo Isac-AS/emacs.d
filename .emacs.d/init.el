@@ -19,8 +19,12 @@
 (require 'isac-emacs-avy)
 (require 'isac-emacs-meow)
 
+;; Important packages
+(require 'isac-emacs-magit)
+
 ;; Interaction improvements
 (require 'isac-emacs-completion)
+(require 'isac-emacs-pickers)
 
 ;; Lang
 (require 'isac-emacs-treesit)
