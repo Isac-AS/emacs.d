@@ -60,7 +60,7 @@
 (keymap-global-set "C-c D" 'consult-eglot-diagnostics)
 
 ;; 6. File diagnostics (current buffer, or Eglot if active)
-(keymap-global-set "C-c e" 'consult-flymake)
+(keymap-global-set "C-c w" 'consult-flymake)
 
 ;; 7. Symbols in file (methods/functions, Treesitter-enhanced)
 (keymap-global-set "C-c s" 'consult-imenu)

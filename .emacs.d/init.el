@@ -21,6 +21,7 @@
 
 ;; Important packages
 (require 'isac-emacs-magit)
+(require 'isac-emacs-eglot)
 
 ;; Interaction improvements
 (require 'isac-emacs-completion)
