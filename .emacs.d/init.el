@@ -14,6 +14,9 @@
 (require 'isac-emacs-themes)
 (require 'isac-emacs-fonts)
 
+;; Knowledge base
+(require 'isac-emacs-org)
+
 ;; Keys
 (require 'isac-emacs-parens)
 (require 'isac-emacs-avy)
@@ -25,7 +28,7 @@
 
 ;; Interaction improvements
 (require 'isac-emacs-completion)
-(require 'isac-emacs-pickers)
+(require 'isac-emacs-pickers) ; many keybinds here
 
 ;; Lang
 (require 'isac-emacs-treesit)

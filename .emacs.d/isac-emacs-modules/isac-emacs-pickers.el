@@ -36,7 +36,7 @@
   "Call 'consult-find' in buffer's directory."
   (interactive)
   (consult-find default-directory))
-(keymap-global-set "C-c s" 'isac-consult-find-current-directory)
+(keymap-global-set "C-c D" 'isac-consult-find-current-directory)
 
 ;; 3. Buffer picker - Simply use consult buffer
 (keymap-global-set "C-c f" 'consult-buffer)
@@ -57,7 +57,7 @@
 (keymap-global-set "C-c t" 'isac-consult-git-changed-files)
 
 ;; 5. Project diagnostics (Eglot/LSP workspace)
-(keymap-global-set "C-c D" 'consult-eglot-diagnostics)
+(keymap-global-set "C-c W" 'consult-eglot-diagnostics)
 
 ;; 6. File diagnostics (current buffer, or Eglot if active)
 (keymap-global-set "C-c w" 'consult-flymake)
@@ -65,11 +65,14 @@
 ;; 7. Symbols in file (methods/functions, Treesitter-enhanced)
 (keymap-global-set "C-c s" 'consult-imenu)
 
+;; 8. Consult outline
+(keymap-global-set "C-c S" 'consult-outline)
+
 ;; 8. Symbols in workspace (Eglot/LSP)
 (keymap-global-set "C-c q" 'consult-eglot-symbols)
 
 ;; 9. Search text (ripgrep global, async with previews)
-(keymap-global-set "C-c e" 'consult-ripgrep)
+(keymap-global-set "C-c e" 'consult-grep)
 
 ;; Provide
 (provide 'isac-emacs-pickers)

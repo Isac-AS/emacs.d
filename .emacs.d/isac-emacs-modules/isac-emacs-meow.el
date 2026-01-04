@@ -55,8 +55,7 @@
    '("9" . meow-digit-argument)
    '("0" . meow-digit-argument)
    '("/" . meow-keypad-describe-key)
-   '("?" . meow-cheatsheet)
-   '("a" . "M-x"))
+   '("?" . meow-cheatsheet))
 
   
   (meow-normal-define-key
@@ -107,7 +106,7 @@
    '("p" . meow-cancel-selection)
    '("P" . meow-pop-selection)
 
-   '("x" . meow-till)
+   '("x" . meow-delete)
    '("z" . meow-find)
 
    ;; Bounds
@@ -119,7 +118,7 @@
    ;; Editing
    '("d" . meow-kill)
    '("f" . meow-change)
-   '("t" . meow-delete)
+   '("t" . meow-till)
    '("c" . meow-save)
    '("v" . meow-yank)
 

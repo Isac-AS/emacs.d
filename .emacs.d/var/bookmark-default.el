@@ -2,7 +2,20 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("improvement-todos.org"
+(("org-capture-last-stored"
+ (filename . "~/Documents/org/journal/diary.org")
+ (front-context-string . "**** [2026-01-03")
+ (rear-context-string . "-01-03 Saturday\n")
+ (position . 52)
+ (last-modified 26969 35992 489345 357000))
+("Practical Common Lisp"
+ (front-context-string . "Copyright © 2003")
+ (rear-context-string)
+ (position . 1)
+ (last-modified 26969 25941 87173 8000)
+ (location . "https://gigamonkeys.com/book/introduction-why-lisp")
+ (handler . eww-bookmark-jump))
+("improvement-todos.org"
  (filename . "~/Downloads/Telegram Desktop/org/improvement-todos.org")
  (front-context-string . "* Improvement Ta")
  (rear-context-string)
