@@ -1,14 +1,28 @@
+;;; isac-emacs-meow.el --- Meow configuration
+;;; Commentary:
+;;; This file will contain the
+;;; Code:
 ;; Meow Config:
 (use-package meow)
 (require 'meow)
 
 (defun isac-dired-up-behaviour ()
+  "Prevents ^ overwrite in Dired mode."
   (interactive)
   (if (eq major-mode 'dired-mode)
       (dired-up-directory)
     (windmove-up)))
 
+(defun isac-paragraph-mark-and-fill ()
+  "Mark current paragraph, if this was the last function called, fill region."
+  (interactive)
+  (if (eq 'last-command 'isac-paragraph-mark-and-fill)
+      (fill-region)
+    (mark-paragraph))
+  )
+
 (defun meow-setup ()
+  "Main function that assigns bindings to Meow modes."
   ;; ---------------------- ;;
   ;;       Thing table      ;;
   ;; ---------------------- ;;
@@ -139,6 +153,8 @@
    '("b" . open-line)
    '("B" . split-line)
 
+   '("Q" . isac-paragraph-mark-and-fill)
+
 
    '("[" . sp-wrap-square)
    '("]" . sp-wrap-square)
@@ -196,3 +212,5 @@
 
 ;; Provide
 (provide 'isac-emacs-meow)
+
+;;; isac-emacs-meow.el ends here

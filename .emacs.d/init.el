@@ -1,4 +1,5 @@
-
+;; -*- lexical-binding: t; -*-
+;;; init.el --- Calls other modules defined in isac-emacs-modules directory
 ;; Add modules and lisp to load path
 (dolist (path (list (expand-file-name "isac-emacs-modules" user-emacs-directory)
                     (expand-file-name "isac-lisp" user-emacs-directory)))
@@ -27,6 +28,8 @@
 (require 'isac-emacs-eglot)
 
 ;; Interaction improvements
+(require 'isac-emacs-spell)
+(require 'isac-emacs-minor-modes)
 (require 'isac-emacs-completion)
 (require 'isac-emacs-pickers) ; many keybinds here
 
@@ -35,3 +38,5 @@
 
 ;; Custom stuff
 (require 'isac-emacs-scroll)
+
+;;; init.el ends here

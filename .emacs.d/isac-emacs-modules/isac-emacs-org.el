@@ -70,7 +70,10 @@
          "* %U %?\n ")
 	;; Potentially add more journaling under this prefix
 
-        ("e" "Practical Common Lisp Todo" entry
+        ("e" "Emacs config Todo" entry
+         (file+headline "~/Documents/org/agenda/emacs-config.org" "Unsorted")
+         "* TODO [#B] %?\n:Created: %T\n ")
+        ("r" "Practical Common Lisp Todo" entry
          (file+headline "~/Documents/org/agenda/practical-common-lisp.org" "Unsorted")
          "* TODO [#B] %?\n:Created: %T\n ")
         ;; Add similar blocks for subsequent projects
@@ -106,12 +109,14 @@
 ;;; Other configurations
 ;; Follow the links
 (setq org-return-follows-link  t)
+(setq org-use-fast-todo-selection t)
 
 ;; Associate all org files with org mode
 (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
 
 ;; Make the indentation look nicer
 (add-hook 'org-mode-hook 'org-indent-mode)
+(add-hook 'org-mode-hook 'auto-fill-mode)
 
 
 ;;; Key bindings

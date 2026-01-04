@@ -1,5 +1,8 @@
+;;; isac-emacs-core.el --- Has basic configurations.
 ;; -*- lexical-binding: t; -*-
-
+;;; Commentary:
+;;; These are basic configurations for packages, the use-package macro and other.
+;;; Code:
 ;;; Package.el
 ;; Initialize package resources
 (setopt package-archives '(("gnu-elpa" . "https://elpa.gnu.org/packages/")
@@ -121,3 +124,5 @@
 
 ;;; Provide
 (provide 'isac-emacs-core)
+
+;;; isac-emacs-core.el ends here

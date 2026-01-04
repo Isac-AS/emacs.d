@@ -2,12 +2,24 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("org-capture-last-stored"
+(("org"
+ (filename . "~/Documents/org/")
+ (front-context-string . "agenda\n  drwxr-x")
+ (rear-context-string . "96 Jan  4 09:04 ")
+ (position . 163)
+ (last-modified 26970 20212 870589 865000))
+("org-refile-last-stored"
+ (filename . "~/Documents/org/agenda/emacs-config.org")
+ (front-context-string . "** TODO [#A] Mig")
+ (rear-context-string . "l.el]] module.\n\n")
+ (position . 3170)
+ (last-modified 26970 19064 861581 131000))
+("org-capture-last-stored"
  (filename . "~/Documents/org/journal/diary.org")
- (front-context-string . "**** [2026-01-03")
- (rear-context-string . "-01-03 Saturday\n")
- (position . 52)
- (last-modified 26969 35992 489345 357000))
+ (front-context-string . "**** [2026-01-04")
+ (rear-context-string . "r los párrafos.\n")
+ (position . 1119)
+ (last-modified 26970 20779 163475 227000))
 ("Practical Common Lisp"
  (front-context-string . "Copyright © 2003")
  (rear-context-string)
