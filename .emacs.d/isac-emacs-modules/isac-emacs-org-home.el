@@ -3,24 +3,64 @@
 ;;; Org agenda and capture templates for home
 ;;; Code:
 
+(require 'cl-lib)
+
 ;;; Files and templates
 (setq org-directory "~/Documents/org")
 
 ;; Org agenda
 (setq org-agenda-files
-      '("~/Documents/org/agenda/inbox.org"
-	"~/Documents/org/agenda/quests.org"
+      `,(nconc
+	 (directory-files (expand-file-name "~/Documents/org/projects/") t "org$")
+	 (directory-files (expand-file-name "~/Documents/org/areas/") t "org$")))
 
-	;; Projects
-	"~/Documents/org/agenda/emacs-config.org"
-	"~/Documents/org/agenda/practical-common-lisp.org"
+(setq org-default-notes-file "~/Documents/org/projects/inbox.org")
+
+(defun get-project-capture-templates ()
+  "Creates a capture template for each or file under projects.
+Looks at the filenames under the projects folder and creates a capture
+template for each of the files"
+  (let ((capture-templates ())
+	(filenames (directory-files (expand-file-name "~/Documents/org/projects/")
+				    t
+				    "org$"))
+	(reserved-keys '("C" "q")))
+    
+    (dolist (filename filenames)
+      (cl-destructuring-bind (updated-list template)
+	  (create-file-headline-capture-template filename reserved-keys)
+	(setq reserved-keys updated-list)
+	(push template capture-templates)
 	))
+    capture-templates))
 
-(setq org-default-notes-file "~/Documents/org/agenda/inbox.org")
+(defun create-file-headline-capture-template (filename reserved-keys)
+  "Create a capture template for a filename.
+Takes FILENAME and will add a capture template for it.
+Will pick a different shortcut from the ones in RESERVED-KEYS.
+Will add the chosen shortcut to RESERVED-KEYS."
+  (let* ((substring-first 0)
+	 (substring-last 1)
+	 (base-name (file-name-base filename))
+	 (template-key (substring base-name substring-first substring-last)))
+    (while (seq-contains-p reserved-keys template-key)
+      (cl-incf substring-first)
+      (cl-incf substring-last)
+      (setf template-key (substring base-name substring-first substring-last)))
+    
+    (push template-key reserved-keys)
+
+
+    (let ((template `(,template-key
+		      ,base-name entry
+		      (file+headline ,filename "Unsorted")
+		      "* TODO [#B] %?\n:Created: %T\n ")))
+      (list reserved-keys template))))
+
 
 ;; Capture templates
 (setq  org-capture-templates
-       '(("t" "General Todo" entry
+       `(("t" "General Todo" entry
          (file "~/Documents/org/agenda/inbox.org")
          "* TODO [#B] %?\n:Created: %T\n ")
 
@@ -34,24 +74,7 @@
          "* %U %?\n ")
 	;; Potentially add more journaling under this prefix
 
-        ("e" "Emacs config Todo" entry
-         (file+headline "~/Documents/org/agenda/emacs-config.org" "Unsorted")
-         "* TODO [#B] %?\n:Created: %T\n ")
-        ("r" "Practical Common Lisp Todo" entry
-         (file+headline "~/Documents/org/agenda/practical-common-lisp.org" "Unsorted")
-         "* TODO [#B] %?\n:Created: %T\n ")
-        ;; Add similar blocks for subsequent projects
-
-	("q" "Quests")
-	("qm" "Main Quest" entry
-	 (file+headline "~/Documents/org/agenda/quests.org" "Main Quests")
-	 "* TODO [#C] %?\n:Created: %T\n ")
-	("qs" "Secondary Quest" entry
-         (file+headline "~/Documents/org/agenda/quests.org" "Secondary Quests")
-         "* TODO [#A] %?\nDEADLINE: %^t\n:Created: %U\n ")
-        ("qp" "Periodic Quest" entry
-         (file+headline "~/Documents/org/agenda/quests.org" "Periodic Quests")
-         "* TODO [#C] %?\nSCHEDULED: %^t\n:Created: %U\n ")
+	,@(get-project-capture-templates)
        ))
 
 ;; Provide

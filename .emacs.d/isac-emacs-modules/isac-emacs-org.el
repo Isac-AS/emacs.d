@@ -8,9 +8,9 @@
   :ensure t
   :custom
   (when AT-LINUX
-    (setq denote-directory "~/Documents/org/denote"))
+    (setq denote-directory (expand-file-name "~/Documents/org/denote/")))
   (when AT-WORK
-    (setq denote-directory "~/org/denote"))
+    (setq denote-directory (expand-file-name "~/org/denote/")))
 
   (denote-file-type 'org)
 
@@ -102,6 +102,12 @@
 ;; Org
 (define-key org-mode-map (kbd "C-c <up>") 'org-priority-up)
 (define-key org-mode-map (kbd "C-c <down>") 'org-priority-down)
+
+(when AT-LINUX
+  (setq denote-directory (expand-file-name "~/Documents/org/denote/")))
+(when AT-WORK
+  (setq denote-directory (expand-file-name "~/org/denote/")))
+
 
 ;; Provide
 (provide 'isac-emacs-org)
