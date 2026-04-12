@@ -29,7 +29,7 @@
 ;; Knowledge base
 (require 'isac-emacs-org)
 
-;; Keys
+;; Keys bindings
 (require 'isac-emacs-parens)
 (require 'isac-emacs-avy)
 (require 'isac-emacs-meow)
@@ -53,5 +53,39 @@
 
 ;; Custom stuff
 (require 'isac-emacs-scroll)
+(require 'isac-emacs-music)
 
 ;;; init.el ends here
+(keymap-set global-map "C-v" #'isac-scroll-half-page-down)
+(keymap-set global-map "M-v" #'isac-scroll-half-page-up)
+
+(keymap-set dired-mode-map "K" #'dired-do-kill-lines)
+(keymap-set dired-mode-map "r" #'dired-mark-files-regexp)
+(keymap-set dired-mode-map "b" #'dired-save-pwd-to-clipboard)
+
+(defun dired-save-pwd-to-clipboard ()
+  "Interactive function that saves dired currend pwd to clipboard"
+  (interactive)
+  (kill-new (pwd)))
+(which-key-mode)
+(repeat-mode)
+
+
+(defun isac-change-to-spanish-input ()
+  "Changes input method, ispell-local-dictionary and jinx languages to
+  spanish"
+  (interactive)
+  (activate-input-method "spanish-prefix")
+  (ispell-change-dictionary "es")
+  (setq jinx-languages "es"))
+
+(setq display-buffer-alist
+      '(
+	("\\*xref\\*"
+	 (display-buffer-reuse-window
+	  display-buffer-below-selected)
+	 (dedicated . t))
+	("\\*Occur\\*"
+	 (display-buffer-reuse-window
+	  display-buffer-below-selected))
+	))
