@@ -34,6 +34,26 @@
 (global-display-line-numbers-mode t)
 ;(setq display-line-numbers-type 'relative)
 
+;; Disable bidirectional text scanning
+(setq-default bidi-display-reordering 'left-to-right
+              bidi-paragraph-direction 'left-to-right)
+(setq bidi-inhibit-bpa t)
+
+;; Skip fontification during input
+(setq redisplay-skip-fontification-on-input t)
+
+;; Increase Process Output Buffer for LSP
+(setq read-process-output-max (* 4 1024 1024)) ; 4MB
+
+;; Save the Clipboard Before Killing (Purcell, Prot, Centaur)
+(setq save-interprogram-paste-before-kill t)
+
+;; No duplicates in the Kill Ring
+(setq kill-do-not-save-duplicates t)
+
+;; Auto select help windows
+(setq help-window-select t)
+
 ;; Maybe move this to calendar / diary?
 (setq calendar-week-start-day 1)
 (setq calendar-latitude 28.1)
