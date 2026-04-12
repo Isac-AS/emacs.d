@@ -185,6 +185,10 @@
    '(";f" . save-buffer)
    '(";F" . save-some-buffers)
    '(";d" . meow-query-replace-regexp)
+   '(";e" . mark-paragraph)
+   '(";w" . fill-region)
+   '(";v" . consult-yank-pop)
+   '(";V" . consult-yank-replace)
    ;; ... etc
 
    ;; Frequently used commands
@@ -216,6 +220,9 @@
 (keymap-global-set "C-c l" 'avy-goto-line)
 (keymap-global-set "C-c A" 'consult-org-agenda)
 (keymap-global-set "C-c y" 'avy-goto-word-1)
+(keymap-global-set "C-c k" 'avy-goto-word-1)
+(keymap-global-set "C-c K" 'avy-goto-symbol-1)
+
 ;; TODO: Look into this better, probably want to use the ";" prefix?
 ;; Or some other C-c one.
 ;; Problems are that ";" and under "<leader>" are meow only prefixes

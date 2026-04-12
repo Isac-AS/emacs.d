@@ -20,6 +20,9 @@
 ;;    (global grep, but improved with "The_silver_bullet" / ripgrep / dumbjump)
 
 ;;; Code:
+;; Quality of life improvement:
+(setf dired-dwim-target t)
+
 ;; 1. Find file in project
 (keymap-global-set "C-c d" 'project-find-file)
 
@@ -63,7 +66,10 @@
 (keymap-global-set "C-c q" 'consult-eglot-symbols)
 
 ;; 9. Search text (ripgrep global, async with previews)
-(keymap-global-set "C-c e" 'consult-grep)
+(keymap-global-set "C-c e" 'consult-ripgrep)
+(keymap-global-set "C-c E" 'consult-grep)
+
+
 
 ;; Provide
 (provide 'isac-emacs-pickers)
