@@ -78,14 +78,7 @@
   (corfu-auto-prefix 2)
   (corfu-preselect-first nil)
   :init
-  (global-corfu-mode)
-  :bind
-  (:map corfu-map
-        ("C-k" . corfu-next)
-        ("C-i" . corfu-previous)
-        ("RET" . nil)
-        ("TAB" . corfu-next)
-        ("C-<return>" . corfu-insert)))
+  (global-corfu-mode))
 
 ;; Persist history over Emacs restarts. Vertico sorts by history position.
 (use-package savehist
