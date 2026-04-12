@@ -24,6 +24,8 @@
   :ensure t
   :hook (prog-mode . rainbow-delimiters-mode))
 
+(add-hook 'sly-repl-mode-hook #'rainbow-delimiters-mode)
+
 (use-package highlight-parentheses
   :ensure t)
 

@@ -21,6 +21,11 @@
 	'(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US") nil utf-8)))
   )
 
+(use-package jinx
+  :hook (emacs-startup . global-jinx-mode)
+  :bind (("M-$" . jinx-correct)
+         ("C-M-$" . jinx-languages)))
+
 ;; Enable Flyspell in text modes (Org, Markdown, etc.)
 (add-hook 'text-mode-hook 'flyspell-mode)
 
