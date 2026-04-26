@@ -1,0 +1,37 @@
+* Month %U [%]
+** Planning
+The goal is course correction and alignment with Objective and Key results.
+*** 🗺️ Strategy & Alignment
+- [ ] *Review Quarterly OKRs:*
+- [ ] *The Monthly Theme:* (e.g., "The Month of Shipping" or "The Month of Recovery")
+
+*** 🎯 Core Milestones (The "Big 3" for this Month) (More high-level than tasks)
+- [ ] Milestone 1: %^{Milestone 1}
+- [ ] Milestone 2: %^{Milestone 2}
+- [ ] Milestone 3: %^{Milestone 3}
+
+** Review
+*** 🔋 The Bucket Health (0-10)
+|-------------------+-------+---------------------------------------|
+| Bucket            | Score | The "One Thing" to improve this month |
+|-------------------+-------+---------------------------------------|
+| Personal projects |       |                                       |
+| Health/Body       |       |                                       |
+| Wealth/Fin        |       |                                       |
+| Social/Rel        |       |                                       |
+| Media             |       |                                       |
+|-------------------+-------+---------------------------------------|
+
+*** ⏪ Retrospective (Looking back at the last 4 weeks)
+- [ ] *Biggest Win:*
+- [ ] *Biggest Lesson:*
+- [ ] *System Decay:* (What habits or routines fell apart this month?)
+
+*** 🗓️ Future Horizon
+- [ ] *Calendar Audit:* What is coming up in the next 2 months?
+- [ ] *Waitlist:* Any items in "Someday/Maybe" that should move to "Active"?
+
+*** 🧠 Reflection Questions
+- /"If I continue at this exact pace/direction, where will I be in 6 months? Am I happy with that?"/
+- /"What is the biggest 'debt' (technical, emotional, or financial) I'm carrying?"/
+- /"What should I stop doing?"/

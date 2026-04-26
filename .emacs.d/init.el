@@ -76,8 +76,8 @@
   spanish"
   (interactive)
   (activate-input-method "spanish-prefix")
-  (ispell-change-dictionary "es")
-  (setq jinx-languages "es"))
+  (call-interactively ispell-change-dictionary "es")
+  (call-interactively jinx-languages "es"))
 
 (setq display-buffer-alist
       '(

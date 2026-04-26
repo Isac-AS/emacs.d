@@ -1,0 +1,32 @@
+*  %U %?
+** 😧 Trabajo
+
+** 🌇 Tarde
+
+** 🧠 Aprendizaje y Notas
+*** ¿He escrito notas hoy? (Denotes/Multimedia)
+*** He aprendido algo nuevo
+  
+** 🏃 Meta & Salud
+:PROPERTIES:
+:SLEEP: %^{Hours Sleep}
+:ENERGY: %^{Energy|L|M|H}
+:PRODUCTIVITY: %^{Productivity|L|M|H}
+:WEIGHT: %^{Weight}
+:END:
+
+** Salud
+*** Ejercicio
+%^{Tipo de ejercicio / No}
+*** Comidas
+Desayuno: %^{Desayuno}
+Almuerzo: %^{Almuerzo}
+Cena: %^{Cena}
+
+** 🐜 Reflexión
+*** Momentos destacados
+*** Momentos tensión
+*** Cosas que han hecho feliz o por las que estoy agradecido
+1. 
+2. 
+3. 

@@ -5,23 +5,23 @@
 
 (require 'cl-lib)
 
-;;; Files and templates
+;;; Files
 (setq org-directory "~/Documents/org")
 
 ;; Org agenda
 (setq org-agenda-files
-      `,(nconc
-	 (directory-files (expand-file-name "~/Documents/org/projects/") t "org$")
-	 (directory-files (expand-file-name "~/Documents/org/areas/") t "org$")))
+      `,(directory-files (expand-file-name "~/Documents/org/projects/active") t "org$"))
 
 (setq org-default-notes-file "~/Documents/org/projects/inbox.org")
 
+;; Capture templates
+;; Helpers
 (defun get-project-capture-templates ()
   "Creates a capture template for each or file under projects.
 Looks at the filenames under the projects folder and creates a capture
 template for each of the files"
   (let ((capture-templates ())
-	(filenames (directory-files (expand-file-name "~/Documents/org/projects/")
+	(filenames (directory-files (expand-file-name "~/Documents/org/projects/active")
 				    t
 				    "org$"))
 	(reserved-keys '("C" "q")))
@@ -53,29 +53,66 @@ Will add the chosen shortcut to RESERVED-KEYS."
 
     (let ((template `(,template-key
 		      ,base-name entry
-		      (file+headline ,filename "Unsorted")
-		      "* TODO [#B] %?\n:Created: %T\n ")))
+		      (file+headline ,filename "Inbox")
+		      "* TODO [#B] %?\n:Created: %T\n** Goal\n")))
       (list reserved-keys template))))
 
+(defun isac/get-quarter-string ()
+  "Gets a string with the current quarter."
+  (let ((month (string-to-number (format-time-string "%m"))))
+    (format "Q%d" (+ 1 (/ (- month 1) 3)))))
 
-;; Capture templates
 (setq  org-capture-templates
-       `(("t" "General Todo" entry
-         (file "~/Documents/org/agenda/inbox.org")
-         "* TODO [#B] %?\n:Created: %T\n ")
+       `(("i" "General Todo" entry
+          (file "~/Documents/org/agenda/inbox.org")
+          "* TODO [#B] %?\n:Created: %T\n ")
 
-        ("j" "Diary Entry" entry
-         (file+olp+datetree "~/Documents/org/journal/diary.org")
-         "* %U %?\n ")
-	
-	("J" "Additional Journaling")
-	("Jf" "Finances" entry
-         (file+olp+datetree "~/Documents/org/journal/finances.org")
-         "* %U %?\n ")
-	;; Potentially add more journaling under this prefix
+	 ;; Journaling related
+         ("1" "Diary Journal" entry
+          (file+olp+datetree "~/Documents/org/journal/diary.org")
+	  (file ,(expand-file-name "./capture-templates/daily-capture-template.org"))
+	  :clock-in t
+	  :clock-resume t)
 
-	,@(get-project-capture-templates)
-       ))
+	 ("2" "Weekly" entry
+          (file+olp+datetree "~/Documents/org/planning/weekly.org")
+          (file ,(expand-file-name "./capture-templates/weekly-capture-template.org"))
+	  :tree-type week
+	  :time-prompt t
+	  :clock-in t
+	  :clock-resume t)
+
+	 ("3" "Monthly" entry
+	  (file+olp+datetree "~/Documents/org/planning/monthly.org")
+          (file ,(expand-file-name "./capture-templates/monthly-capture-template.org"))
+	  :tree-type month
+	  :time-prompt t
+	  :clock-in t
+	  :clock-resume t)
+
+	 ("4" "Quarterly" entry
+          (file+olp "~/Documents/org/planning/quarterly.org"
+		    ,(format-time-string "%Y")
+		    ,(isac/get-quarter-string))
+          (file ,(expand-file-name "./capture-templates/quarterly-capture-template.org"))
+	  :clock-in t
+	  :clock-resume t)
+
+	 ("5" "Yearly" entry
+          (file+olp "~/Documents/org/planning/yearly.org" ,(format-time-string "%Y"))
+          (file ,(expand-file-name "./capture-templates/yearly-capture-template.org"))
+	  :clock-in t
+	  :clock-resume t)
+
+	 ("6" "Finances" entry
+          (file+olp+datetree "~/Documents/org/journal/finances.org")
+          "* %U %?\n "
+	  :clock-in t
+	  :clock-resume t)
+
+	 ;; Project capture templates
+	 ,@(get-project-capture-templates)
+	 ))
 
 ;; Provide
 (provide 'isac-emacs-org-home)

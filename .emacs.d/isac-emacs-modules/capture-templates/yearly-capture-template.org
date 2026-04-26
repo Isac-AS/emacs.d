@@ -1,0 +1,55 @@
+* Year %U [%]
+:PROPERTIES:
+:ID-ENTITY: %^{Who am I becoming this year?}
+:WORD_OF_YEAR: %^{One word to define this year}
+:END:
+
+** Planning
+*** 🌟 The North Star (Vision)
+- /"What would make this year a 'win' if nothing else happened?"/
+- *Identity Statement:* "I am the person who..." (e.g., "finishes things," "prioritizes health")
+- *Key Roles:* (PhD Candidate, Partner, Developer, Athlete) — What does success look like for each?
+
+*** 🏔️ The 4 Major Pillars (One per Quarter)
+- [ ] Q1 Focus:
+- [ ] Q2 Focus:
+- [ ] Q3 Focus:
+- [ ] Q4 Focus:
+
+*** 🎯 High-Level Objectives (The "Big 5")
+1. %^{Yearly Obj 1}
+2. %^{Yearly Obj 2}
+3. 
+4. 
+5. 
+
+*** 🧱 Foundation & Habits
+- *Non-negotiables:* (e.g., Sleep 7h, Morning Review, 3x Gym)
+- *The "Not-To-Do" List:* (What habits/distractions am I leaving in last year?)
+
+*** 5 year vision at the start of the year
+/What are my priorities now?/
+
+** Review
+*** 🎞️ The Year in Review (Post-Mortem)
+- [ ] *The Highlight Reel:* (Top 3 achievements)
+- [ ] *The Lowlight Reel:* (Top 3 failures/lessons)
+- [ ] *Bucket Audit:* Which areas of life were neglected for 12 months?
+- [ ] /How did the quarters go?/
+
+*** 📈 Metrics & Growth
+- *Wealth:* (Net worth change, savings rate)
+- *Health:* (Fitness PRs, weight, general feel)
+
+*** 🧠 Existential Reflection
+- /"What is a belief I held at the start of the year that I no longer hold?"/
+- /"Am I closer to my 5-year vision than I was 365 days ago?"/
+- /"If I had to live this exact year again, what would I change?"/
+
+*** 🎁 Media & Experiences
+- Best Book:
+- Best Trip/Experience:
+- Key Memory:
+
+*** 5 year vision at the end of the year
+/What are my priorities now?/

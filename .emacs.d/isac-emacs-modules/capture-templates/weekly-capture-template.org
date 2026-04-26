@@ -1,0 +1,46 @@
+* Week %U
+** 🎯 Plan
+*** Goals [0%]
+- [ ] Goal 1: %^{Goal 1}
+- [ ] Goal 2: %^{Goal 2}
+- [ ] Goal 3: %^{Goal 3}
+
+*** Outcomes
+Goal 1 -> 
+Goal 2 -> 
+Goal 3 -> 
+
+** ⏪ Review (Check the goals above)
+*** Goal related
+**** How did it go?
+
+**** Final score
+
+*** 🧠 Reflection
+**** Signal vs Noise question
+/"If I could only do one thing this week to make everything else
+easier or unnecessary, what would it be?"/
+
+**** Bottleneck Audit
+/"What is the one thing I'm currently avoiding or procrastinating on?"/
+/"Who/What am I waiting for?"/
+
+**** Ideal vs Real
+/"Where did my 'Real' schedule deviate most from my 'Ideal' last week,
+and why?"/
+
+**** Energy metric
+/How tired am I? (0 not tired-10 very tired)/
+
+*** ➰ Usual periodic checks. Anything to say about...?
+**** Media (books read, games played, films watched)
+
+**** Things I learned
+
+**** Financially
+
+**** Exercise
+/Did I do exercise at least 3 days?/
+
+**** Relationship related
+/Did I reach out to {family | friends}.../

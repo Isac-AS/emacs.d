@@ -1,0 +1,41 @@
+* %U [%]
+:PROPERTIES:
+:THEME: %^{Theme}
+:END:
+
+** Planning
+*** 🔭 The Vision
+- *Current Yearly Focus:** (Go check the yearly document)
+- *Quarterly Theme:** %^{Theme} (e.g., "Deep Focus," "Infrastructure Foundations")
+
+*** 🎯 Objectives & Key Results (OKRs)
+**** Objective 1: %^{Objective 1}
+- [ ] KR 1: %^{Key Result 1}
+- [ ] KR 2: 
+**** Objective 2: %^{Objective 2}
+- [ ] KR 1: 
+- [ ] KR 2: 
+**** Objective 3 (Personal/Health): %^{Objective 3}
+- [ ] KR 1: 
+- [ ] KR 2: 
+
+*** 🏗️ Projects & "Objectives" Alignment
+/Which active projects in my GTD system support these OKRs?/
+- [ ] Project A -> Supports Objective 1
+- [ ] Project B -> Supports Objective 2
+
+** Review
+*** ⏪ Last Quarter's Post-Mortem
+- [ ] *The Score:** (What % of OKRs were hit?)
+- [ ] *The "Why":** (If I missed a goal, was it lack of effort, bad planning, or life interference?)
+- [ ] *The Pivot:** (What am I stopping this quarter to make room for the new OKRs?)
+
+*** 🧠 Strategic Reflection
+- /"If I could only accomplish ONE objective this quarter to be satisfied, which is it?"/
+- /"What is my 'Burnout Buffer'? (How will I rest?)"/
+- /"What are the 20% of activities producing 80% of my results?"/
+
+*** 🗓️ 12-Week Horizon
+- [ ] Month 1 Focus:
+- [ ] Month 2 Focus:
+- [ ] Month 3 Focus:

@@ -158,14 +158,6 @@
 
    '("Q" . isac-paragraph-mark-and-fill)
 
-
-   '("[" . sp-wrap-square)
-   '("]" . sp-wrap-square)
-   '("{" . sp-wrap-curly)
-   '("}" . sp-wrap-curly)
-   '("(" . sp-wrap-round)
-   '(")" . sp-wrap-round)
-
    ;; Prefix "n"
    '("nf" . meow-comment)
    '("nt" . meow-start-kmacro-or-insert-counter)
