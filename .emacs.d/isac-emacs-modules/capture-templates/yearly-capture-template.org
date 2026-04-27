@@ -30,6 +30,10 @@
 *** 5 year vision at the start of the year
 /What are my priorities now?/
 
+*** What things am I happy about my life?
+
+*** What things am I NOT happy about my life and I wish to change?
+
 ** Review
 *** 🎞️ The Year in Review (Post-Mortem)
 - [ ] *The Highlight Reel:* (Top 3 achievements)
@@ -53,3 +57,5 @@
 
 *** 5 year vision at the end of the year
 /What are my priorities now?/
+
+*** Did I make progress in the things I wanted to change?

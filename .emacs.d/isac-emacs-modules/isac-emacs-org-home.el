@@ -16,14 +16,11 @@
 
 ;; Capture templates
 ;; Helpers
-(defun get-project-capture-templates ()
-  "Creates a capture template for each or file under projects.
+(defun get-project-capture-templates (filenames)
+  "Create a capture template for the FILENAMES provided.
 Looks at the filenames under the projects folder and creates a capture
 template for each of the files"
   (let ((capture-templates ())
-	(filenames (directory-files (expand-file-name "~/Documents/org/projects/active")
-				    t
-				    "org$"))
 	(reserved-keys '("C" "q")))
     
     (dolist (filename filenames)
@@ -63,11 +60,15 @@ Will add the chosen shortcut to RESERVED-KEYS."
     (format "Q%d" (+ 1 (/ (- month 1) 3)))))
 
 (setq  org-capture-templates
-       `(("i" "General Todo" entry
+
+       `(
+	 ("-" "\n\n--- Agenda ---")
+	 ("i" "General Todo" entry
           (file "~/Documents/org/agenda/inbox.org")
           "* TODO [#B] %?\n:Created: %T\n ")
 
 	 ;; Journaling related
+	 ("-" "\n\n--- Journaling ---")
          ("1" "Diary Journal" entry
           (file+olp+datetree "~/Documents/org/journal/diary.org")
 	  (file ,(expand-file-name "./capture-templates/daily-capture-template.org"))
@@ -111,7 +112,11 @@ Will add the chosen shortcut to RESERVED-KEYS."
 	  :clock-resume t)
 
 	 ;; Project capture templates
-	 ,@(get-project-capture-templates)
+	 ("-" "\n\n--- Projects ---")
+	 ,@(get-project-capture-templates (directory-files (expand-file-name "~/Documents/org/projects/active") t "org$"))
+
+	 ("-" "\n\n--- Areas ---")
+	 ,@(get-project-capture-templates (directory-files (expand-file-name "~/Documents/org/projects/areas") t "org$"))
 	 ))
 
 ;; Provide
