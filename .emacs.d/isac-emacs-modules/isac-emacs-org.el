@@ -19,15 +19,6 @@
   (denote-date-prompt-use-org-read-date t) ; Calendar picker for
 					; backdating
 
-  ;; Predefined keywords
-  (when AT-LINUX
-    (denote-known-keywords
-     '("emacs" "lisp" "finance")))
-
-  (when AT-WORK
-    (denote-known-keywords
-     '("emacs" "azure" "code")))
-
   ;; Auto-infer keywords from existing notes
   (denote-infer-keywords t)
 
@@ -48,10 +39,132 @@
 (use-package org)
 
 (when AT-LINUX
-  (require 'isac-emacs-org-home))
+  (setq org-directory "~/Documents/org"))
 
 (when AT-WORK
-  (require 'isac-emacs-org-work))
+  (setq org-directory "~/org"))
+
+;; Org agenda
+(setq org-agenda-files
+      `,(directory-files (expand-file-name "~/Documents/org/projects/active") t "org$"))
+
+(setq org-default-notes-file "~/Documents/org/projects/inbox.org")
+
+(setq ias/org-capture-reserved-keys '("C" "q"))
+
+;; Capture templates
+;; Helpers
+(defun ias/org-capture-get-project-capture-templates (filenames)
+  "Create a capture template for each filename in FILENAMES.
+Looks at the filenames under the projects folder and creates a capture
+template for each of the files"
+  (let ((capture-templates ()))
+    (dolist (filename filenames)
+	(push (ias/org-capture-create-capture-template-for-project-file filename) capture-templates))
+    capture-templates))
+
+(defun ias/org-capture-create-capture-template-for-project-file (filename)
+  "Create a capture template for FILENAME."
+  (let* ((template-key (ias/org-capture-get-next-available-template-key filename))
+	 (base-name (file-name-base filename)))
+    `(,template-key
+      ,base-name ; Perhaps try read the #+title: property for the name
+      entry
+      (file+headline ,filename "Inbox")
+      "* TODO [#B] %?\n:Created: %T\n ")))
+
+(defun ias/org-capture-get-next-available-template-key (filename)
+  "Get next available template key for FILENAME.
+Will attempt to add the first letter as template key.
+If that letter is already picked, will try with the next letter."
+  (let* ((substring-first 0)
+	 (substring-last 1)
+	 (base-name (file-name-base filename))
+	 (template-key (substring base-name substring-first substring-last)))
+    (while (seq-contains-p ias/org-capture-reserved-keys template-key)
+      (cl-incf substring-first)
+      (cl-incf substring-last)
+      (setf template-key (substring base-name substring-first substring-last)))
+    (push template-key ias/org-capture-reserved-keys)
+    template-key))
+
+
+;; (defun ias/org-capture-get-file-title-keyworkd (filename)
+;;   "Get title property value for FILENAME."
+;;   (with-current-buffer (find-file-noselect filename)
+;;     (let (keywords (org-collect-keywords '("TITLE")
+;;   )
+
+(defun ias/get-quarter-string ()
+  "Gets a string with the current quarter."
+  (let ((month (string-to-number (format-time-string "%m"))))
+    (format "Q%d" (+ 1 (/ (- month 1) 3)))))
+
+(setq  org-capture-templates
+       `(
+	 ("-" "\n\n--- Agenda ---")
+	 ("i" "General Todo" entry
+          (file "~/Documents/org/agenda/inbox.org")
+          "* TODO [#B] %?\n:Created: %T\n ")
+	 ("m" "Meeting" entry
+	  (file+olp+datetree "~/org/agenda/meetings.org")
+          "* %? :meeting:%^g \n:Created: %T\n** Attendees\n*** \n** Notes\n** Action Items\n*** TODO [#A] "
+          :tree-type week
+          :clock-in t
+          :clock-resume t
+          :empty-lines 0)
+
+	 ;; Journaling related
+	 ("-" "\n\n--- Journaling ---")
+         ("1" "Diary Journal" entry
+          (file+olp+datetree "~/Documents/org/journal/diary.org")
+	  (file ,(expand-file-name "./capture-templates/daily-capture-template.org"))
+	  :clock-in t
+	  :clock-resume t)
+
+	 ("2" "Weekly" entry
+          (file+olp+datetree "~/Documents/org/planning/weekly.org")
+          (file ,(expand-file-name "./capture-templates/weekly-capture-template.org"))
+	  :tree-type week
+	  :time-prompt t
+	  :clock-in t
+	  :clock-resume t)
+
+	 ("3" "Monthly" entry
+	  (file+olp+datetree "~/Documents/org/planning/monthly.org")
+          (file ,(expand-file-name "./capture-templates/monthly-capture-template.org"))
+	  :tree-type month
+	  :time-prompt t
+	  :clock-in t
+	  :clock-resume t)
+
+	 ("4" "Quarterly" entry
+          (file+olp "~/Documents/org/planning/quarterly.org"
+		    ,(format-time-string "%Y")
+		    ,(ias/get-quarter-string))
+          (file ,(expand-file-name "./capture-templates/quarterly-capture-template.org"))
+	  :clock-in t
+	  :clock-resume t)
+
+	 ("5" "Yearly" entry
+          (file+olp "~/Documents/org/planning/yearly.org" ,(format-time-string "%Y"))
+          (file ,(expand-file-name "./capture-templates/yearly-capture-template.org"))
+	  :clock-in t
+	  :clock-resume t)
+
+	 ("6" "Finances" entry
+          (file+olp+datetree "~/Documents/org/journal/finances.org")
+          "* %U %?\n "
+	  :clock-in t
+	  :clock-resume t)
+
+	 ;; Project capture templates
+	 ("-" "\n\n--- Projects ---")
+	 ,@(ias/org-capture-get-project-capture-templates (directory-files (expand-file-name "~/Documents/org/projects/active") t "org$"))
+
+	 ("-" "\n\n--- Areas ---")
+	 ,@(ias/org-capture-get-project-capture-templates (directory-files (expand-file-name "~/Documents/org/projects/areas") t "org$"))
+	 ))
 
 ;; Refile targets
 (setq org-refile-targets

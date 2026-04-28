@@ -22,6 +22,13 @@
 ;;; Code:
 ;; Quality of life improvement:
 (setf dired-dwim-target t)
+(keymap-set dired-mode-map "K" #'dired-do-kill-lines)
+(keymap-set dired-mode-map "r" #'dired-mark-files-regexp)
+(keymap-set dired-mode-map "b" #'ias/dired-save-pwd-to-clipboard)
+(defun ias/dired-save-pwd-to-clipboard ()
+  "Interactive function that saves dired currend pwd to clipboard"
+  (interactive)
+  (kill-new (pwd)))
 
 ;; 1. Find file in project
 (keymap-global-set "C-c d" 'project-find-file)
@@ -35,9 +42,11 @@
 
 ;; 3. Buffer picker - Simply use consult buffer
 (keymap-global-set "C-c f" 'consult-buffer)
+(keymap-global-set "C-c v" 'consult-register)
+(keymap-global-set "C-c b" #'point-to-register)
 
 ;; 4. Git changed files (custom, see below)
-(defun isac-consult-git-changed-files ()
+(defun ias/consult-git-changed-files ()
   "Picker for modified git files."
   (interactive)
   (if-let ((root (project-root (project-current)))
@@ -48,7 +57,7 @@
 				:category 'file
 				:require-match t))
     (message "No git project or changes.")))
-(keymap-global-set "C-c t" 'isac-consult-git-changed-files)
+(keymap-global-set "C-c t" 'ias/consult-git-changed-files)
 
 ;; 5. Project diagnostics (Eglot/LSP workspace)
 (keymap-global-set "C-c W" 'consult-eglot-diagnostics)
@@ -69,9 +78,6 @@
 (keymap-global-set "C-c e" 'consult-ripgrep)
 (keymap-global-set "C-c E" 'consult-grep)
 
-
-
 ;; Provide
 (provide 'isac-emacs-pickers)
-
 ;;; isac-emacs-pickers.el ends here
