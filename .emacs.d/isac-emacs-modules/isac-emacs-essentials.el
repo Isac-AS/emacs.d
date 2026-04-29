@@ -54,6 +54,10 @@
 ;; Auto select help windows
 (setq help-window-select t)
 
+;; This makes windows go | A| B| C|
+;; instead of | A |B|C|
+(setq window-combination-resize t)
+
 ;; Maybe move this to calendar / diary?
 (setq calendar-week-start-day 1)
 (setq calendar-latitude 28.1)
@@ -61,3 +65,5 @@
 
 ;; Provide
 (provide 'isac-emacs-essentials)
+
+;;; isac-emacs-essentials.el ends here

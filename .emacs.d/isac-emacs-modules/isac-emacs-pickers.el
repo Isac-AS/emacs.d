@@ -34,11 +34,7 @@
 (keymap-global-set "C-c d" 'project-find-file)
 
 ;; 2. Find file in current directory
-(defun isac-consult-find-current-directory ()
-  "Call 'consult-find' in buffer's directory."
-  (interactive)
-  (consult-find default-directory))
-(keymap-global-set "C-c D" 'isac-consult-find-current-directory)
+(keymap-set global-map "C-c D" 'consult-fd)
 
 ;; 3. Buffer picker - Simply use consult buffer
 (keymap-global-set "C-c f" 'consult-buffer)

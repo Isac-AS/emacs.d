@@ -17,8 +17,10 @@
 		 '(csharp-mode . ("csharp-ls"))))
   (use-package csharp-mode
     :hook
-    (csharp-mode . eglot-ensure))
-  )
+    (csharp-mode . eglot-ensure)))
+
+;(setq eglot-event-buffer-config '(:size 0 :format short))
+;(fset #'jsonrpc--log-event #'ignore)
 
 ;; Provide
 (provide 'isac-emacs-eglot)
