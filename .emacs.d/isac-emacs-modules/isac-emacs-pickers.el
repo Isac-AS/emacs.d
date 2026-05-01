@@ -74,6 +74,17 @@
 (keymap-global-set "C-c e" 'consult-ripgrep)
 (keymap-global-set "C-c E" 'consult-grep)
 
+;; More shortcuts I'm dumping that should be reviewed
+
+;; Apparently these are no longer useful because
+;; `electric-pair-mode' essentially does it just by pressing
+;; the corresponding characters. HOWEVER. It does not work in
+;; `meow-normal-mode'.
+(keymap-set global-map "M-{" 'insert-pair)
+(keymap-set global-map "M-[" 'insert-pair)
+(keymap-set global-map "M-\"" 'insert-pair)
+(keymap-set global-map "M-)" 'delete-pair)
+
 ;; Provide
 (provide 'isac-emacs-pickers)
 ;;; isac-emacs-pickers.el ends here
