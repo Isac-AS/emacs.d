@@ -1,24 +1,43 @@
-;;; isac-routines.el --- Display routines in eww widget
+;;; isac-routines.el --- Routine parser from Org to JSON -*- lexical-binding: t; -*-
 ;;; Commentary:
-
 ;;; From `man date':
 ;;;     %u     day of week (1..7); 1 is Monday
 ;;; Code:
+
 (require 'org-element)
 (require 'json)
 
-;; Will assume org-directory is defined.
+(defgroup ias-routine nil
+  "Parse routines defined in Org file into structure data/JSON."
+  :group 'org
+  :prefix "ias-routine-")
 
-;; Function to get the headings of the file
+(defcustom ias-routine-file (expand-file-name (concat org-directory "agenda/routine-reference.org"))
+  "Path to the Org file containing routine definitions."
+  :type 'file
+  :group 'ias-routine)
 
-;; Function to read the table
+(defcustom ias-routine-export-file "~/.config/eww/routines.json"
+  "Where to export the serialized JSON."
+  :type 'file
+  :group 'ias-routine)
 
-;; Function to convert rows in json objects with start-end-action fields
+;; ---
+;;; Core Parsing Functions
 
-;; Function to have that be a json list
+;;; DEVELOPMENT
+(defmacro with-routine-buffer (&rest body)
+  "Execute BODY with the routine Org file current and widened.
+Also binds `tree' to the parsed element tree for convenience."
+  `(with-current-buffer (find-file-noselect
+                         (or ias-routine-file
+                             (expand-file-name "agenda/routine-reference.org" org-directory)))
+     (org-with-wide-buffer
+      ,@body)))
 
-;; Try traverse with (org-get-heading) and (org-next-visible-heading)
-;; Take a look at [[file:~/.emacs.d/elpa/consult-2.9/consult-org.el::(apply]]
+(defalias 'wr 'with-routine-buffer)
+
+;; Function to extract properties from the property drawer
 
 (defvar ias/org-routine-properties '(:ROUTINE-NAME :ROUTINE-KEY :EMOJI :DEFAULT-DAYS :DEFAULT-DAY-OF-WEEK))
 
@@ -84,6 +103,62 @@
     (with-temp-file config-file-path
       (insert json-data))
     (message "Exported routines")))
+
+
+(defmacro with-routine-buffer (&rest body)
+  "Execute BODY with the routine Org file current and widened.
+Also binds `tree' to the parsed element tree for convenience."
+  `(with-current-buffer (find-file-noselect
+                         (or ias-routine-file
+                             (expand-file-name "agenda/routine-reference.org" org-directory)))
+     (org-with-wide-buffer
+      ,@body)))
+
+(defalias 'wr 'with-routine-buffer)
+
+;; Property parsing
+(defun ias-routine--get-headline-properties-plist (headline)
+  "Extract properties from HEADLINE property drawer.
+
+Return a property with the uppercase property name and property value."
+  ((org-element-contents headline)))
+
+;; Table parsing
+
+;; Headline
+(defun ias-routine--parse-routine-headline (headline)
+  "Parse routine buffer HEADLINE.
+
+A routine buffer HEADLINE is a parse tree (for example, returned by
+`org-element-map') and is expected to contain a property drawer and
+a table.
+
+Return a list of property lists. Each property list has one
+property for each value pair found in the property drawer and one
+property for the table. That table property is itself a list of
+property lists, each representing a row of the table with the key
+value being the name of the column./"
+  (let ((routine-headline-contents
+  (org-element-property-drawer-parser)
+  )
+
+
+
+;; Tests
+(wr (org-element-map (org-element-parse-buffer) 'headline
+      (lambda (headline) (org-element-property-drawer-parser))))
+
+(wr (org-property-values "EMOJI"))
+(wr (org-entry-properties))
+(wr (org-buffer-property-keys))
+(wr (let ((property-keys (org-buffer-property-keys))
+	  (org-tree (org-element-parse-buffer)))
+      property-keys))
+
+
+
+
+
 
 
 ;;; isac-routines ends here

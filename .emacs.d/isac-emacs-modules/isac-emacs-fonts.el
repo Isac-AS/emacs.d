@@ -4,8 +4,8 @@
 
 ;;; Code:
 (when AT-LINUX
-  (defvar is/default-font-size 150)
-  (defvar is/default-variable-font-size 150)
+  (defvar is/default-font-size 155)
+  (defvar is/default-variable-font-size 155)
   (set-face-attribute 'default nil
 		      :font "Commit Mono Nerd Font"
 		      :height is/default-font-size))
