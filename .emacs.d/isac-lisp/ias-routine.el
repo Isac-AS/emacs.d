@@ -23,151 +23,7 @@
   :group 'ias-routine)
 
 ;; ---
-;;; Core Parsing Functions
-
-;;; DEVELOPMENT
-(defmacro with-routine-buffer (&rest body)
-  "Execute BODY with the routine Org file current and widened.
-Also binds `tree' to the parsed element tree for convenience."
-  `(with-current-buffer (find-file-noselect
-                         (or ias-routine-file
-                             (expand-file-name "agenda/routine-reference.org" org-directory)))
-     (org-with-wide-buffer
-      ,@body)))
-
-(defalias 'wr 'with-routine-buffer)
-
-;; Function to extract properties from the property drawer
-
-(defun ias/org-routine--parse-array (str)
-  "Parse STR with `json-parse-string' to make a vector."
-  (if (and str (stringp str))
-      (condition-case nil
-          (json-parse-string str :array-type 'array)
-        (error (vector)))   ; fallback
-    (vector)))
-
-(defun ias/org-routine--clean-cell (cell)
-  "Clean CELL property string."
-  (if (stringp cell) (string-trim (substring-no-properties cell)) ""))
-
-(defun ias/org-routine--get-heading-properties (headline)
-  "Extract properties from a HEADLINE element."
-  (cl-loop for property-keyword in ias/org-routine-properties
-           collect property-keyword
-           collect (org-element-property property-keyword headline)))
-
-(defun ias/org-routine--get-first-table (headline)
-  "Return the first table element inside HEADLINE."
-  (car (org-element-map headline 'table #'identity nil t)))
-
-(defun ias/org-routine--parse-table (table-element)
-  "Turn TABLE-ELEMENT into list of rows (each row a list of 3 strings)."
-  (if (null table-element)
-      nil
-    (save-excursion
-      (goto-char (org-element-property :begin table-element))
-      (let ((rows (cdr (org-table-to-lisp))))
-	(mapcar (lambda (row)
-		  (unless (eq row 'hline)
-		    (list
-		     :start-time (ias/org-routine--clean-cell (nth 0 row))
-		     :end-time (ias/org-routine--clean-cell (nth 1 row))
-		     :action (ias/org-routine--clean-cell (nth 2 row)))))
-		rows)))))
-
-(defun ias/org-routine--parse-file (file-path)
-  "Parse FILE-PATH into a list of plists/alists."
-  (with-current-buffer (find-file-noselect file-path)
-    (org-with-wide-buffer
-     (apply #'vector
-	    (org-element-map (org-element-parse-buffer) 'headline
-	      (lambda (headline)
-		(when (= (org-element-property :level headline) 1)
-		  (let* ((props (ias/org-routine--get-heading-properties headline))
-			 (table-rows (ias/org-routine--parse-table (org-element-map headline 'table #'identity nil t))))
-		    (list :ROUTINE-NAME (plist-get props :ROUTINE-NAME)
-			  :ROUTINE-KEY (plist-get props :ROUTINE-KEY)
-			  :EMOJI (plist-get props :EMOJI)
-			  :DEFAULT-DAYS (ias/org-routine--parse-array (plist-get props :DEFAULT-DAYS))
-			  :DEFAULT-DAY-OF-WEEK (ias/org-routine--parse-array (plist-get props :DEFAULT-DAY-OF-WEEK))
-			  :time-table (apply #'vector table-rows))))))))))
-
-
-(defun ias/org-routine--update-config-file ()
-  (let ((config-file-path (expand-file-name "~/.config/eww/routines.json"))
-	(json-data (json-serialize (ias/org-routine--parse-file (expand-file-name
-								 (concat org-directory "agenda/routine-reference.org"))))))
-    (with-temp-file config-file-path
-      (insert json-data))
-    (message "Exported routines")))
-
-
-(defmacro with-routine-buffer (&rest body)
-  "Execute BODY with the routine Org file current and widened.
-Also binds `tree' to the parsed element tree for convenience."
-  `(with-current-buffer (find-file-noselect
-                         (or ias-routine-file
-                             (expand-file-name "agenda/routine-reference.org" org-directory)))
-     (org-with-wide-buffer
-      ,@body)))
-
-(defalias 'wr 'with-routine-buffer)
-
 ;; Property parsing
-(defun ias-routine--get-headline-properties-plist (headline)
-  "Extract properties from HEADLINE property drawer.
-
-Return a property with the uppercase property name and property value."
-  ((org-element-contents headline)))
-
-;; Table parsing
-
-;; Headline
-(defun ias-routine--parse-routine-headline (headline)
-  "Parse routine buffer HEADLINE.
-
-A routine buffer HEADLINE is a parse tree (for example, returned by
-`org-element-map') and is expected to contain a property drawer and
-a table.
-
-Return a list of property lists. Each property list has one
-property for each value pair found in the property drawer and one
-property for the table. That table property is itself a list of
-property lists, each representing a row of the table with the key
-value being the name of the column./"
-  (let ((routine-headline-contents
-  (org-element-property-drawer-parser)
-  )
-)))
-;;;; ---- LATEST
-(defun ias-routine--get-key-and-value-from-node-property (node-property)
-  "Extract (:key value) from NODE-PROPERTY."
-  (cons (intern (concat ":" (org-element-property :key node-property)))
-	(org-element-property :value node-property)))
-
-(defun ias-routine--get-property-list-from-headline-property-drawer (property-drawer)
-  "Extract properties from PROPERTY-DRAWER.
-
-Return a property list with the interned property key and its value."
-  (apply #'append
-	 (org-element-map property-drawer 'node-property
-	   (lambda (node-property)
-	     "Return a list out of the :KEY and value in the NODE-PROPERTY."
-	     (list (intern (concat ":" (org-element-property :key node-property)))
-		   (org-element-property :value node-property))))))
-
-(defun ias-routine--get-association-list-from-headline-property-drawer (property-drawer)
-  "Extract properties from PROPERTY-DRAWER.
-
-Return an association list with the interned property key and its value."
-  (org-element-map property-drawer 'node-property
-    (lambda (node-property)
-      "Return a list out of the :KEY and value in the NODE-PROPERTY."
-      (cons (intern (concat ":" (org-element-property :key node-property)))
-	    (org-element-property :value node-property)))))
-
-;; Using flags to either get a plist or alist
 (defun ias-routine--node-property-to-pair (node-property format)
   "Convert NODE-PROPERTY to a pair using FORMAT.
 
@@ -191,6 +47,33 @@ By default an association list is returned. If AS-PLIST is t a plist is returned
       results)))
 
 ;; Table parsing
+(defun ias-routine--clean-cell (cell)
+  "Clean CELL property string."
+  (if (stringp cell) (string-trim (substring-no-properties cell)) ""))
+
+(defun ias-routine--extract-table-header (table-row)
+  "Parse first TABLE-ROW and return a keyword list with the column names."
+  (mapcar
+   (lambda (header)
+     (intern (concat ":" (ias-routine--clean-cell header))))
+   table-row))
+
+(defun ias-routine--parse-table (table)
+  "Extract elements from TABLE."
+  (save-excursion
+    (goto-char (org-element-property :begin table))
+    (let* ((table-data (org-table-to-lisp))
+	   (clean-data (remq 'hline table-data))
+	   (headers (ias-routine--extract-table-header (car clean-data)))
+	   (rows (cdr clean-data)))
+      
+      (cons :table
+	    (mapcar
+	     (lambda (row)
+	       (cl-pairlis headers
+			   (mapcar #'ias-routine--clean-cell row)))
+	     rows))
+      )))
 
 ;; Headline
 (defun ias-routine--parse-routine-headline (headline)
@@ -205,28 +88,68 @@ property for each value pair found in the property drawer and one
 property for the table. That table property is itself a list of
 property lists, each representing a row of the table with the key
 value being the name of the column./"
-  (org-element-map headline 'property-drawer
-    (lambda (property-drawer) (ias-routine--get-properties-from-property-drawer property-drawer t))
-    ;#'ias-routine--get-property-list-from-headline-property-drawer
-    nil t)
-)
+  (let ((properties (org-element-map headline 'property-drawer
+		    (lambda (property-drawer) (ias-routine--get-properties-from-property-drawer property-drawer nil))
+		    nil t))
+	(parsed-table (org-element-map headline 'table
+		    #'ias-routine--parse-table
+		    nil t)))
+    (push parsed-table properties)))
 
 
-;; Tests
-(wr (org-element-map (org-element-parse-buffer) 'headline
-      (lambda (headline) (org-element-property-drawer-parser))))
+;; JSON export
+(defun ias-routine--write-to-json (data)
+  "Write DATA to `ias-routine-export-file'.
 
-(wr (org-property-values "EMOJI"))
-(wr (org-entry-properties))
-(wr (org-buffer-property-keys))
-(wr (let ((property-keys (org-buffer-property-keys))
-	  (org-tree (org-element-parse-buffer)))
-      property-keys))
+Return non-nil if successful."
+  (let ((target (or ias-routine-export-file (expand-file-name "export.json"))))
+    (condition-case err
+        (progn
+          (with-temp-file target
+            (insert (json-encode data)))
+          (message "Successfully exported to %s" target)
+          t) ; Return t for success
+      (error
+       (message "Export failed: %s" (error-message-string err))
+       nil))))
 
+;; Interactive function to attempt parsing and export
+(defun ias-routine-export-routines ()
+  "Export routines using custom variables.
 
+Will use the routine file defined in `ias-routine-file'.
+Will attempt to export headline properties and table data to
+the file `ias-routine-export-file'."
+  (interactive)
+  (with-current-buffer (find-file-noselect
+                        (or ias-routine-file
+                            (expand-file-name "agenda/routine-reference.org" org-directory)))
+    (org-with-wide-buffer
+     (let* ((parsed-routine-file
+	     (org-element-map (org-element-parse-buffer) 'headline
+	       #'ias-routine--parse-routine-headline))
+	    (success (ias-routine--write-to-json parsed-routine-file)))
+       (if success
+           (message "Export of %d headlines completed." (length parsed-routine-file))
+         (error "Export failed! Check *Messages* for details"))))))
 
+;; DEVELOPMENT HELPERS
+;; (ias-routine--wr
+;;  (let ((parsed-routine-file
+;; 	(org-element-map (org-element-parse-buffer) 'headline
+;; 	  #'ias-routine--parse-routine-headline)))
+;;    (json-encode parsed-routine-file)))
 
+(defmacro ias-routine--with-routine-buffer (&rest body)
+  "Execute BODY with the routine Org file current and widened.
+Also binds `tree' to the parsed element tree for convenience."
+  `(with-current-buffer (find-file-noselect
+                         (or ias-routine-file
+                             (expand-file-name "agenda/routine-reference.org" org-directory)))
+     (org-with-wide-buffer
+      ,@body)))
 
+(defalias 'ias-routine--wr 'ias-routine--with-routine-buffer)
 
-
-;;; isac-routines ends here
+(provide 'ias-routine)
+;;; ias-routine.el ends here.
