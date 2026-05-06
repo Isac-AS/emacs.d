@@ -39,8 +39,6 @@ Also binds `tree' to the parsed element tree for convenience."
 
 ;; Function to extract properties from the property drawer
 
-(defvar ias/org-routine-properties '(:ROUTINE-NAME :ROUTINE-KEY :EMOJI :DEFAULT-DAYS :DEFAULT-DAY-OF-WEEK))
-
 (defun ias/org-routine--parse-array (str)
   "Parse STR with `json-parse-string' to make a vector."
   (if (and str (stringp str))
@@ -141,7 +139,77 @@ value being the name of the column./"
   (let ((routine-headline-contents
   (org-element-property-drawer-parser)
   )
+)))
+;;;; ---- LATEST
+(defun ias-routine--get-key-and-value-from-node-property (node-property)
+  "Extract (:key value) from NODE-PROPERTY."
+  (cons (intern (concat ":" (org-element-property :key node-property)))
+	(org-element-property :value node-property)))
 
+(defun ias-routine--get-property-list-from-headline-property-drawer (property-drawer)
+  "Extract properties from PROPERTY-DRAWER.
+
+Return a property list with the interned property key and its value."
+  (apply #'append
+	 (org-element-map property-drawer 'node-property
+	   (lambda (node-property)
+	     "Return a list out of the :KEY and value in the NODE-PROPERTY."
+	     (list (intern (concat ":" (org-element-property :key node-property)))
+		   (org-element-property :value node-property))))))
+
+(defun ias-routine--get-association-list-from-headline-property-drawer (property-drawer)
+  "Extract properties from PROPERTY-DRAWER.
+
+Return an association list with the interned property key and its value."
+  (org-element-map property-drawer 'node-property
+    (lambda (node-property)
+      "Return a list out of the :KEY and value in the NODE-PROPERTY."
+      (cons (intern (concat ":" (org-element-property :key node-property)))
+	    (org-element-property :value node-property)))))
+
+;; Using flags to either get a plist or alist
+(defun ias-routine--node-property-to-pair (node-property format)
+  "Convert NODE-PROPERTY to a pair using FORMAT.
+
+Format can either be 'alist or 'plist, returning the pair
+as an alist or plist correspondingly."
+  (let ((key (intern (concat ":" (org-element-property :key node-property))))
+        (val (org-element-property :value node-property)))
+    (if (eq format 'alist)
+        (cons key val)
+      (list key val))))
+
+
+(defun ias-routine--get-properties-from-property-drawer (property-drawer &optional as-plist)
+  "Extract properties from PROPERTY-DRAWER depending on AS-PLIST.
+
+By default an association list is returned. If AS-PLIST is t a plist is returned."
+  (let ((results (org-element-map property-drawer 'node-property
+                   (lambda (prop) (ias-routine--node-property-to-pair prop (if as-plist 'plist 'alist))))))
+    (if as-plist
+	(apply #'append results)
+      results)))
+
+;; Table parsing
+
+;; Headline
+(defun ias-routine--parse-routine-headline (headline)
+  "Parse routine buffer HEADLINE.
+
+A routine buffer HEADLINE is a parse tree (for example, returned by
+`org-element-map') and is expected to contain a property drawer and
+a table.
+
+Return a list of property lists. Each property list has one
+property for each value pair found in the property drawer and one
+property for the table. That table property is itself a list of
+property lists, each representing a row of the table with the key
+value being the name of the column./"
+  (org-element-map headline 'property-drawer
+    (lambda (property-drawer) (ias-routine--get-properties-from-property-drawer property-drawer t))
+    ;#'ias-routine--get-property-list-from-headline-property-drawer
+    nil t)
+)
 
 
 ;; Tests
