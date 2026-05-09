@@ -181,6 +181,7 @@
    '(";w" . fill-region)
    '(";v" . consult-yank-pop)
    '(";V" . consult-yank-replace)
+   '(";c" . compile)
    ;; ... etc
 
    ;; Frequently used commands
@@ -210,10 +211,12 @@
 (keymap-global-set "C-c u" 'avy-goto-word-0)
 (keymap-global-set "C-c U" 'avy-goto-char)
 (keymap-global-set "C-c l" 'avy-goto-line)
+(keymap-set global-map "C-c L" 'avy-copy-line)
 (keymap-global-set "C-c A" 'consult-org-agenda)
 (keymap-global-set "C-c y" 'avy-goto-word-1)
 (keymap-global-set "C-c k" 'avy-goto-word-1)
 (keymap-global-set "C-c K" 'avy-goto-symbol-1)
+(keymap-set global-map "C-c ;" 'avy-goto-symbol-1)
 
 ;; TODO: Look into this better, probably want to use the ";" prefix?
 ;; Or some other C-c one.

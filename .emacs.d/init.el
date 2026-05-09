@@ -54,8 +54,8 @@
 ;; Custom stuff
 (require 'isac-emacs-scroll)
 (require 'isac-emacs-music)
+(require 'ias-routine)
 
-;;; init.el ends here
 (keymap-set global-map "C-v" #'isac-scroll-half-page-down)
 (keymap-set global-map "M-v" #'isac-scroll-half-page-up)
 
@@ -88,4 +88,8 @@
 	("\\*Occur\\*"
 	 (display-buffer-reuse-window
 	  display-buffer-below-selected))
+	("\\*compilation\\*"
+	 (display-buffer-reuse-window
+	  display-buffer-below-selected))
 	))
+;;; init.el ends here
