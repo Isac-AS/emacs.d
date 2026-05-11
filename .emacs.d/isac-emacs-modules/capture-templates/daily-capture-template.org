@@ -1,8 +1,12 @@
 *  %U %?
-** 😧 Trabajo
+** Resumen
+*** 🌅 Mañana
 
-** 🌇 Tarde
+*** 🌇 Tarde
 
+** Progreso en proyectos (lista de hitos destacados)
+-
+  
 ** 🧠 Aprendizaje y Notas
 *** ¿He escrito notas hoy? (Denotes/Multimedia)
 *** He aprendido algo nuevo
@@ -12,7 +16,6 @@
 :SLEEP: %^{Hours Sleep}
 :ENERGY: %^{Energy|L|M|H}
 :PRODUCTIVITY: %^{Productivity|L|M|H}
-:WEIGHT: %^{Weight}
 :END:
 
 ** Salud

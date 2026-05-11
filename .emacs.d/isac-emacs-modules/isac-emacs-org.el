@@ -195,7 +195,7 @@ If that letter is already picked, will try with the next letter."
 		  "IN-PROGRESS(i!)"
 		  "BLOCKED(b@)"
 		  "|"
-		  "DONE(d!)"
+		  "DONE(d@/!)"
 		  "WONT-DO(w@/!)"
 		  )))
 

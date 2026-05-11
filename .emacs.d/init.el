@@ -71,13 +71,32 @@
 (repeat-mode)
 
 
-(defun isac-change-to-spanish-input ()
-  "Changes input method, ispell-local-dictionary and jinx languages to
-  spanish"
+(defvar ias-current-language "en"
+  "Current language for input + spell checking ('en' or 'es').")
+
+(defun ias-toggle-language ()
+  "Toggle between English (default) and Spanish for input + spelling."
   (interactive)
-  (activate-input-method "spanish-prefix")
-  (call-interactively ispell-change-dictionary "es")
-  (call-interactively jinx-languages "es"))
+  (if (string= ias-current-language "en")
+      (progn
+        (setq ias-current-language "es")
+        (activate-input-method "spanish-prefix")
+        (ispell-change-dictionary "es")
+        (setq jinx-languages "es"))
+    ;; Back to English
+    (setq ias-current-language "en")
+    (deactivate-input-method)
+    (ispell-change-dictionary "en")
+    (setq jinx-languages "en"))
+
+  ;; Restart jinx if active
+  (when (bound-and-true-p jinx-mode)
+    (jinx-mode -1)
+    (jinx-mode 1))
+
+  (message "Language switched to: %s" ias-current-language))
+
+(setq default-input-method "spanish-prefix")
 
 (setq display-buffer-alist
       '(
