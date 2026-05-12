@@ -226,39 +226,6 @@ If that letter is already picked, will try with the next letter."
 (keymap-global-set "C-c a" 'org-agenda)
 (keymap-global-set "C-c c" 'org-capture)
 
-;; Holidays
-(setq holiday-local-holidays
-      '((holiday-fixed 1 1 "Año Nuevo")
-        (holiday-fixed 1 2 "PersonalVacation")
-        (holiday-fixed 1 5 "PersonalVacation")
-        (holiday-fixed 1 6 "Reyes Magos")
-        ;; Local Las Palmas: Martes de Carnaval (2026: Feb 17)
-        (holiday-fixed 2 16 "PersonalVacation")
-        (holiday-fixed 2 17 "Martes de Carnaval (Las Palmas)")
-
-	;; Semana santa
-        (holiday-fixed 3 30 "PersonalVacation")
-        (holiday-fixed 3 31 "PersonalVacation")
-        (holiday-fixed 4  1 "PersonalVacation")
-        (holiday-easter-etc -3 "Jueves Santo")
-        (holiday-easter-etc -2 "Viernes Santo")
-	;;
-        (holiday-fixed 5 1 "Fiesta del Trabajo")
-        (holiday-fixed 5 30 "Día de Canarias")
-        ;; Local Las Palmas: San Juan/Fundación de la ciudad
-        (holiday-fixed 6 24 "San Juan y Fundación de Las Palmas")
-        (holiday-fixed 8 15 "Asunción de la Virgen")
-        ;; Insular: Nuestra Señora del Pino (Gran Canaria)
-        (holiday-fixed 9 8 "Nuestra Señora del Pino")
-        (holiday-fixed 10 12 "Fiesta Nacional de España")
-        (holiday-fixed 11 1 "Todos los Santos")
-        (holiday-fixed 12 6 "Día de la Constitución")
-        (holiday-fixed 12 8 "Inmaculada Concepción")
-        (holiday-fixed 12 25 "Natividad del Señor")))
-(setq org-agenda-include-diary t)
-(setq holiday-general-holidays nil)
-(setq calendar-holidays (append holiday-general-holidays holiday-local-holidays))
-
 ;; Provide
 (provide 'isac-emacs-org)
 ;;; isac-emacs-org.el ends here

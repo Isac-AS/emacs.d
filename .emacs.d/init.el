@@ -28,6 +28,7 @@
 
 ;; Knowledge base
 (require 'isac-emacs-org)
+(require 'ias-emacs-org-holidays)
 
 ;; Keys bindings
 (require 'isac-emacs-parens)

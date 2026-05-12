@@ -206,6 +206,10 @@
 (meow-setup)
 (meow-global-mode 1)
 
+;; Annoying buffers that should be in motion mode:
+(add-hook 'calendar-mode #'meow-motion-mode)
+
+
 ;; Other keymaps (user defined space)
 (keymap-global-set "C-c j" 'avy-goto-char-timer)
 (keymap-global-set "C-c u" 'avy-goto-word-0)
@@ -216,7 +220,17 @@
 (keymap-global-set "C-c y" 'avy-goto-word-1)
 (keymap-global-set "C-c k" 'avy-goto-word-1)
 (keymap-global-set "C-c K" 'avy-goto-symbol-1)
-(keymap-set global-map "C-c ;" 'avy-goto-symbol-1)
+;; (keymap-set global-map "<f5> e" 'windmove-up)
+;; (keymap-set global-map "<f5> a" 'windmove-down)
+;; (keymap-set global-map "<f5> s" 'windmove-left)
+;; (keymap-set global-map "<f5> f" 'windmove-right)
+;; (keymap-set global-map "<f5> w" 'delete-other-windows)
+;; (keymap-set global-map "<f5> g" 'delete-window)
+;; (keymap-set global-map "<f5> r" 'split-window-vertically)
+;; (keymap-set global-map "<f5> t" 'split-window-horizontally)
+;; (keymap-set global-map "<f5> a" 'other-window-prefix)
+
+
 
 ;; TODO: Look into this better, probably want to use the ";" prefix?
 ;; Or some other C-c one.
