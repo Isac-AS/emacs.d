@@ -1,4 +1,4 @@
-;;; isac-routines.el --- Routine parser from Org to JSON -*- lexical-binding: t; -*-
+;;; ias-routine.el --- Routine parser from Org to JSON -*- lexical-binding: t; -*-
 ;;; Commentary:
 ;;; From `man date':
 ;;;     %u     day of week (1..7); 1 is Monday

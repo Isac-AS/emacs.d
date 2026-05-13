@@ -8,10 +8,9 @@
 (use-package modus-themes)
 
 (setq modus-themes-common-palette-overrides
-      '((bg-region bg-blue-intense)
+      '((bg-region bg-completion)
         (fg-region unspecified)
-	(bg-avy avy-lead-face)
-))
+	(bg-avy avy-lead-face)))
 
 ;; (with-eval-after-load 'modus-themes
 ;;   (custom-set-faces
