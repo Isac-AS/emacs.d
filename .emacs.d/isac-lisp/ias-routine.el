@@ -151,5 +151,90 @@ Also binds `tree' to the parsed element tree for convenience."
 
 (defalias 'ias-routine--wr 'ias-routine--with-routine-buffer)
 
+;;; Routine statistics
+;;; Bunch of functions used to output statistics about routines.
+;;; Essentially extract information per-routine, per-week, and key ratios.
+;;; Information extracted per-routine and per-week are tables that consists of:
+;;; | Total Hours | % total day | % awake day |
+;;; Key ratios are:
+;;; Work:All non-working time
+;;; Work+Commute:All non-working time
+;;; Rest:Other non-working time
+;;; Project Work:Other non-working time
+
+;; Division of concerns:
+;; 0.	Parse table and create data structure for each routine
+;;	That data structure will be an alist with the form (Task . total_time)
+;; 1.	Compute routine daily hour sum by task
+;; 2.	Compute routine hour total percentage by task
+;; 3.	Compute routine hour awake percentage by task
+;; 4.	With the calculations above and usage of default-day-of-week property,
+;;	multiply times the length of the array (total amount of days) and perform
+;;	the weekly calculation.
+;; 4.1. Extract array length
+;; 4.1. Pass in array length sum value to the above?
+;;
+;; 5.	Write to file.
+;; 5.1.	Insert headings
+;; 5.2.	Insert tables
+;; 5.3.	Insert ratios directly
+
+;; Data reference
+((:table ((:Start . "0:00") (:End . "5:30") (:Task . "Sleep")) ((:Start . "5:30") (:End . "6:35") (:Task . "Wake up & commute to work")) ((:Start . "6:45") (:End . "15:30") (:Task . "Work")) ((:Start . "15:30") (:End . "17:00") (:Task . "Commute back from work")) ((:Start . "17:00") (:End . "18:00") (:Task . "Exercise")) ((:Start . "18:00") (:End . "19:00") (:Task . "Work on projects")) ((:Start . "19:00") (:End . "19:30") (:Task . "Dinner break")) ((:Start . "19:30") (:End . "21:30") (:Task . "Free time")) ((:Start . "21:30") (:End . "0:00") (:Task . "Sleep"))) (:ROUTINE-NAME . "Long work day") (:ROUTINE-KEY . "L") (:EMOJI . "😫") (:DEFAULT-DAYS . "[\"Monday\", \"Tuesday\", \"Wednesday\", \"Thursday\"]") (:DEFAULT-DAY-OF-WEEK . "[1, 2, 3, 4]"))
+
+;; Parse table and create data structure
+;; Time functions
+(defun ias-routine-statistics--normalize-time (hours minutes)
+  "Normalize HOURS and MINUTES to minutes in order to operate with the time.
+
+Returns a the result of (60 * HOURS + MINUTES)."
+    (+ (* hours 60) minutes))
+
+(defun ias-routine-statistics--extract-hours-and-minutes (time)
+  "Extract hours and minutes from internal TIME representation.
+
+Return a list with the form (HOURS MINUTES)."
+  (list (/ time 60) (mod time 60)))
+
+
+(defun ias-routine-statistics--parse-str-time (str)
+  "Parse a time string of the format HH:MM in STR to an internal format.
+
+Taken from calfw"
+  (when (string-match "\\([[:digit:]]\\{1,2\\}\\):\\([[:digit:]]\\{2\\}\\)" str)
+    (ias-routine-statistics--normalize-time (string-to-number (match-string 1 str))
+					    (string-to-number (match-string 2 str)))))
+
+(defun ias-routine-statistics--calculate-time-difference (time1 time2)
+  "Take TIME1 and TIME2 formated as 'HH:MM' and return the difference as an integer."
+  (abs (- (ias-routine-statistics--parse-str-time time1)
+	  (ias-routine-statistics--parse-str-time time2))))
+
+(defun ias-routine--get-table-hours-alist (table)
+  "Return alist of the form (Task . hours) from TABLE.
+Note that hours will be returned as a float."
+  (let ((routine-hash-table (make-hash-table :test 'equal)))
+    (cl-loop for row in table
+	     do
+	     (let* ((task (alist-get :Task row))
+		    (time-difference (ias-routine-statistics--calculate-time-difference
+				      (alist-get :Start row)
+				      (alist-get :End row)))
+		    (existing-value (gethash task routine-hash-table nil)))
+	       (when existing-value
+		 (cl-incf time-difference existing-value))
+	       (puthash task time-difference routine-hash-table)))
+    routine-hash-table
+    ))
+
+(ias-routine--wr
+ (let* ((parsed-routine-file
+	 (org-element-map (org-element-parse-buffer) 'headline
+	   #'ias-routine--parse-routine-headline))
+	(test-subject (car parsed-routine-file)))
+   (ias-routine--get-table-hours-alist (alist-get :table test-subject))
+   ))
+
+
 (provide 'ias-routine)
 ;;; ias-routine.el ends here.
