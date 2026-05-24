@@ -174,14 +174,15 @@
    ;; ...etc
 
    ;; Prefix ";"
-   '(";f" . save-buffer)
-   '(";F" . save-some-buffers)
    '(";d" . meow-query-replace-regexp)
    '(";e" . mark-paragraph)
    '(";w" . fill-region)
    '(";v" . consult-yank-pop)
    '(";V" . consult-yank-replace)
    '(";c" . compile)
+   '(";t" . meow-transpose-sexp)
+   '(";f" . meow-forward-slurp)
+   '(";s" . meow-backward-slurp)
    ;; ... etc
 
    ;; Frequently used commands

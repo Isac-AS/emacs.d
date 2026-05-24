@@ -17,6 +17,11 @@
   :type 'file
   :group 'ias-routine)
 
+(defcustom ias-routine-statistics-file (expand-file-name (concat org-directory "agenda/routine-statistics.org"))
+  "Path to the Org file containing routine definitions."
+  :type 'file
+  :group 'ias-routine)
+
 (defcustom ias-routine-export-file "~/.config/eww/routines.json"
   "Where to export the serialized JSON."
   :type 'file
@@ -151,39 +156,6 @@ Also binds `tree' to the parsed element tree for convenience."
 
 (defalias 'ias-routine--wr 'ias-routine--with-routine-buffer)
 
-;;; Routine statistics
-;;; Bunch of functions used to output statistics about routines.
-;;; Essentially extract information per-routine, per-week, and key ratios.
-;;; Information extracted per-routine and per-week are tables that consists of:
-;;; | Total Hours | % total day | % awake day |
-;;; Key ratios are:
-;;; Work:All non-working time
-;;; Work+Commute:All non-working time
-;;; Rest:Other non-working time
-;;; Project Work:Other non-working time
-
-;; Division of concerns:
-;; 0.	Parse table and create data structure for each routine
-;;	That data structure will be an alist with the form (Task . total_time)
-;; 1.	Compute routine daily hour sum by task
-;; 2.	Compute routine hour total percentage by task
-;; 3.	Compute routine hour awake percentage by task
-;; 4.	With the calculations above and usage of default-day-of-week property,
-;;	multiply times the length of the array (total amount of days) and perform
-;;	the weekly calculation.
-;; 4.1. Extract array length
-;; 4.1. Pass in array length sum value to the above?
-;;
-;; 5.	Write to file.
-;; 5.1.	Insert headings
-;; 5.2.	Insert tables
-;; 5.3.	Insert ratios directly
-
-;; Data reference
-((:table ((:Start . "0:00") (:End . "5:30") (:Task . "Sleep")) ((:Start . "5:30") (:End . "6:35") (:Task . "Wake up & commute to work")) ((:Start . "6:45") (:End . "15:30") (:Task . "Work")) ((:Start . "15:30") (:End . "17:00") (:Task . "Commute back from work")) ((:Start . "17:00") (:End . "18:00") (:Task . "Exercise")) ((:Start . "18:00") (:End . "19:00") (:Task . "Work on projects")) ((:Start . "19:00") (:End . "19:30") (:Task . "Dinner break")) ((:Start . "19:30") (:End . "21:30") (:Task . "Free time")) ((:Start . "21:30") (:End . "0:00") (:Task . "Sleep"))) (:ROUTINE-NAME . "Long work day") (:ROUTINE-KEY . "L") (:EMOJI . "😫") (:DEFAULT-DAYS . "[\"Monday\", \"Tuesday\", \"Wednesday\", \"Thursday\"]") (:DEFAULT-DAY-OF-WEEK . "[1, 2, 3, 4]"))
-
-;; Parse table and create data structure
-;; Time functions
 (defun ias-routine-statistics--normalize-time (hours minutes)
   "Normalize HOURS and MINUTES to minutes in order to operate with the time.
 
@@ -210,8 +182,10 @@ Taken from calfw"
   (abs (- (ias-routine-statistics--parse-str-time time1)
 	  (ias-routine-statistics--parse-str-time time2))))
 
-(defun ias-routine--get-table-hours-alist (table)
-  "Return alist of the form (Task . hours) from TABLE.
+(defun ias-routine-statistics--get-table-hours-hash-table (table)
+  "Parse TABLE into a hash-table.
+The `KEY' is a string representing the `TASK'.
+The `VALUE' is the total amount of time in minutes for the task.
 Note that hours will be returned as a float."
   (let ((routine-hash-table (make-hash-table :test 'equal)))
     (cl-loop for row in table
@@ -224,17 +198,156 @@ Note that hours will be returned as a float."
 	       (when existing-value
 		 (cl-incf time-difference existing-value))
 	       (puthash task time-difference routine-hash-table)))
-    routine-hash-table
-    ))
+    routine-hash-table))
 
-(ias-routine--wr
- (let* ((parsed-routine-file
-	 (org-element-map (org-element-parse-buffer) 'headline
-	   #'ias-routine--parse-routine-headline))
-	(test-subject (car parsed-routine-file)))
-   (ias-routine--get-table-hours-alist (alist-get :table test-subject))
-   ))
+(defun ias-routine-statistics--compute-weekly-statistics (routine-stats-data)
+  "Parse ROUTINE-STATS-DATA and compute aggregated data for the week.
 
+Return a hash-table of the form: (TASK . WEEKLY-MINUTES)"
+  (let ((weekly-hash-table (make-hash-table :test 'equal)))
+    (dolist (routine-data routine-stats-data)
+      (let ((multiplier (or (length (json-read-from-string
+				     (alist-get :DEFAULT-DAY-OF-WEEK routine-data)))
+			    1)))
+	(maphash (lambda (task minutes)
+		   (setq minutes (* minutes multiplier))
+		   (let ((existing-value (gethash task weekly-hash-table)))
+		     (when existing-value
+		       (cl-incf minutes existing-value))
+		     (puthash task minutes weekly-hash-table)))
+		 (alist-get :statistics-hash-table routine-data))))
+    weekly-hash-table))
+
+;; Perhaps create a macro that will take care of the iteration and will just let
+;; me get the plist?
+(defun ias-routine-statistics--hash-to-statistics-plist (hash-table)
+  "Convert HASH-TABLE to list of plists for generic table writer."
+  (let (result)
+    (maphash (lambda (task minutes)
+               (push `(:task ,task
+                       :hours ,(format "%d" (/ minutes 60))
+                       :minutes ,(format "%d" (% minutes 60))
+                       :pct-day ,(format "%.1f" (* 100.0 (/ minutes (* 24 60.0))))
+                       :pct-awake ,(format "%.1f" (* 100.0 (/ minutes (* 16 60.0)))))
+                     result))
+             hash-table)
+    result))
+
+(defun ias-routine-statistics--weekly-hash-to-statistics-plist (hash-table)
+  "Convert HASH-TABLE to list of plists for generic table writer."
+  (let (result)
+    (maphash (lambda (task minutes)
+               (push `(:task ,task
+                       :hours ,(format "%d" (/ minutes 60))
+                       :minutes ,(format "%d" (% minutes 60))
+                       :pct-week ,(format "%.1f" (* 100.0 (/ minutes (* 7 24 60.0))))
+                       :pct-awake ,(format "%.1f" (* 100.0 (/ minutes (* 7 16 60.0)))))
+                     result))
+             hash-table)
+    result))
+
+(defun ias-routine-statistics-write-statistics-to-file ()
+  "Parse and write to statistics file."
+  (interactive)
+  (ias-routine--wr
+   (let* ((parsed-routine-file
+	   (org-element-map (org-element-parse-buffer) 'headline
+	     #'ias-routine--parse-routine-headline))
+	  (parsed-with-statistics
+	   (mapcar (lambda (routine)
+		     (push (cons :statistics-hash-table
+				 (ias-routine-statistics--get-table-hours-hash-table
+				  (alist-get :table routine)))
+			   routine))
+		   parsed-routine-file))
+	  (weekly-statistics (ias-routine-statistics--compute-weekly-statistics
+			      parsed-with-statistics)))
+     (ias-routine-statistics-update-statistics-file parsed-with-statistics weekly-statistics))))
+
+(defun ias-routine-statistics-update-statistics-file (routine-stats-data weekly-statistics-hash-table)
+  "Write ROUTINE-STATS-DATA and WEEKLY-STATISTICS-HASH-TABLE to `ias-routine-statistics-file'."
+  (with-temp-file ias-routine-statistics-file
+    (insert "#+TITLE: Routine Statistics & Time Allocation Review\n")
+    (insert "#+DATE: " (format-time-string "[%Y-%m-%d %a]") "\n\n")
+
+    (insert "* Time Allocation by Routine\n")
+    (dolist (routine routine-stats-data)
+      (let ((name (alist-get :ROUTINE-NAME routine))
+	    (routine-statistics-table (ias-routine-statistics--hash-to-statistics-plist
+				       (alist-get :statistics-hash-table routine))))
+        (insert "** " name "\n")
+        (ias-org-utils-insert-generic-table
+         (sort (copy-sequence routine-statistics-table)
+	       :key (lambda (row)
+		      (string-to-number (or (alist-get :pct-awake row) (plist-get row :pct-awake))))
+	       :reverse t)
+         :columns '((:task . "Task")
+		    (:hours . "Hours")
+		    (:minutes . "Minutes")
+		    (:pct-day . "% Day")
+		    (:pct-awake . "% Awake")))
+        (insert "\n")))
+
+    (insert "\n* Weekly Statistics\n\n")
+    (ias-org-utils-insert-generic-table
+     (sort (ias-routine-statistics--weekly-hash-to-statistics-plist weekly-statistics-hash-table)
+	   :key (lambda (row)
+		  (string-to-number (or (alist-get :pct-awake row) (plist-get row :pct-awake))))
+	   :reverse t)
+     :columns '((:task . "Task")
+		(:hours . "Hours")
+		(:minutes . "Minutes")
+		(:pct-week . "% Week")
+		(:pct-awake . "% Awake")))
+
+    (insert "\n\n** Other weekly statistics\n")
+    (insert "*** Time around work\n")
+
+    (let* ((work-minutes (gethash "Work" weekly-statistics-hash-table))
+	   (commute-minutes (gethash "Commute" weekly-statistics-hash-table))
+	   (sleep-minutes (gethash "Sleep" weekly-statistics-hash-table))
+	   (work-and-commute-minutes (+ work-minutes commute-minutes))
+	   (free-will-time (- (* 7 24 60) (+ work-and-commute-minutes sleep-minutes)))
+	   (project-work-minutes (gethash "Work on projects" weekly-statistics-hash-table))
+	   (free-time-minutes (gethash "Free time" weekly-statistics-hash-table)))
+      (insert "|-" "\n")
+      (insert "|Concept| Total time | % Week | % Awake | % Non-working time |" "\n")
+      (insert "|-" "\n")
+      (insert "|Work + Commute"
+	      (ias-routine-statistics--insert-weekly-stats-inline work-and-commute-minutes) "\n")
+      (insert "|Work time"
+	      (ias-routine-statistics--insert-weekly-stats-inline work-minutes) "\n")
+      (insert "|Commute time"
+	      (ias-routine-statistics--insert-weekly-stats-inline commute-minutes) "\n")
+      (insert "|Non working or sleeping time"
+	      (ias-routine-statistics--insert-weekly-stats-inline free-will-time) "\n")
+      (insert "|Time working on projects"
+	      (ias-routine-statistics--insert-weekly-stats-inline project-work-minutes)
+	      (format "%1.f|" (* 100 (/ (float project-work-minutes) free-will-time)))
+	      "\n")
+      (insert "|Free time"
+	      (ias-routine-statistics--insert-weekly-stats-inline free-time-minutes)
+	      (format "%1.f|" (* 100 (/ (float project-work-minutes) free-will-time)))
+	      "\n")
+      (insert "|-" "\n")
+      (org-table-align)
+      (insert "\n")
+      ))
+    (message "Statistics written to %s" ias-routine-statistics-file))
+
+(defun ias-routine-statistics--insert-weekly-stats-inline (minutes)
+  "Insert weekly statistics inline from MINUTES."
+  (format "|%s|%.1f|%.1f|"
+	  (ias-routine-statistics--stringify-minutes minutes)
+	  (* 100 (/ minutes (* 7 24 60.0)))
+	  (* 100 (/ minutes (* 7 16 60.0)))))
+
+(defun ias-routine-statistics--stringify-minutes (minutes)
+  "Return a string with format HH:MM from MINUTES."
+  (let* ((time (ias-routine-statistics--extract-hours-and-minutes minutes))
+	 (hours (cl-first time))
+	 (minutes (cl-second time)))
+    (format "%2d:%2d" hours minutes)))
 
 (provide 'ias-routine)
 ;;; ias-routine.el ends here.

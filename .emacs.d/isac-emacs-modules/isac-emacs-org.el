@@ -208,6 +208,56 @@ If that letter is already picked, will try with the next letter."
 	("WONT-DO" . (:foreground "LightSteelBlue" :weight bold))
 	))
 
+;; Agenda custom commands
+(use-package org-super-agenda)
+(org-super-agenda-mode 1)
+
+(setq org-agenda-custom-commands
+      '(
+        ("d" "Day - Startup View"
+         ((agenda "" ((org-agenda-span 'day)
+                      (org-agenda-skip-scheduled-if-done t)
+                      (org-agenda-skip-deadline-if-done t)
+                      ;; (org-super-agenda-groups
+                      ;;  '((:name "Today" :time-grid t :date today :order 1)))
+		      ))
+          (alltodo#1=""  ((org-agenda-files (directory-files (ias/org-concat-filename-to-org-directory "projects/active") t "org$"))
+			  (org-agenda-overriding-header "=== Active Projects ===")
+			  (org-agenda-prefix-format " ")
+			  (org-agenda-todo-keyword-format "%-10s")
+                          (org-super-agenda-groups
+                           '((:auto-category t)))))
+          (tags-todo "recurrent" ((org-agenda-overriding-header "=== Recurrent Tasks ===")))
+	  (tags "CLOSED>=\"<today>\""
+                ((org-agenda-overriding-header "\nCompleted today\n")))
+	  ))
+
+        ("w" "Week - Planning View"
+         ((agenda "" ((org-agenda-span 'week)))
+          (tags-todo "active" ((org-agenda-overriding-header "=== Active Projects ===")
+                               (org-super-agenda-groups
+                                '((:auto-category t)))))
+          (tags-todo "recurrent" ((org-agenda-overriding-header "=== Recurrent Tasks ===")))
+          (tags-todo "area" ((org-agenda-overriding-header "=== Areas ===")))))
+        
+        ;; === Quick TODO Lists ===
+        ("f" "Active Projects (Grouped by File)"
+         tags-todo "active"
+         ((org-agenda-overriding-header "=== Active Projects ===")
+          (org-super-agenda-groups '((:auto-category t)))))
+        ("g" "Areas"           tags-todo "area")
+        ("r" "Recurrent Tasks" tags-todo "recurrent")
+        ("s" "All Tasks"       tags-todo "active|area|recurrent")
+	("t" "List of all TODO entries"
+	 ((alltodo #1# ((org-agenda-prefix-format " ")
+			(org-super-agenda-groups '((:auto-category t)))))))
+	("n" "Agenda and all TODOs"
+	 ((agenda #1="")
+	  (alltodo #1# ((org-agenda-prefix-format " ")
+			(org-super-agenda-groups '((:auto-category t)))))))
+        ))
+
+;; (setq org-agenda-hide-tags-regexp ".")
 ;;; Other configurations
 ;; Follow the links
 (setq org-return-follows-link  t)
@@ -228,4 +278,4 @@ If that letter is already picked, will try with the next letter."
 
 ;; Provide
 (provide 'isac-emacs-org)
-;;; isac-emacs-org.el ends here
+;;; isac-emacs-org.el ends 
