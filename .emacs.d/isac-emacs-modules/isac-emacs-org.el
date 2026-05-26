@@ -3,13 +3,14 @@
 ;;; This file will include denote and org mode configuration.
 ;;; Code:
 ;; Helpers
+
 (defun ias/org-capture-get-project-capture-templates (filenames)
   "Create a capture template for each filename in FILENAMES.
 Looks at the filenames under the projects folder and creates a capture
 template for each of the files"
   (let ((capture-templates ()))
     (dolist (filename filenames)
-	(push (ias/org-capture-create-capture-template-for-project-file filename) capture-templates))
+      (push (ias/org-capture-create-capture-template-for-project-file filename) capture-templates))
     capture-templates))
 
 (defun ias/org-capture-create-capture-template-for-project-file (filename)
@@ -49,8 +50,8 @@ If that letter is already picked, will try with the next letter."
   (let ((month (string-to-number (format-time-string "%m"))))
     (format "Q%d" (+ 1 (/ (- month 1) 3)))))
 
-(defun ias/org-concat-filename-to-org-directory (filename)
-"Concatenate FILENAME to the current `org-directory'."
+(defun ias--org-concat-filename-to-org-directory (filename)
+  "Concatenate FILENAME to the current `org-directory'."
   (expand-file-name (concat org-directory filename)))
 
 (defun ias/org-concat-filename-to-relative-config-directory (filename)
@@ -102,81 +103,81 @@ If that letter is already picked, will try with the next letter."
 ;; Org agenda
 (setq org-agenda-files
       `,(nconc
-	 (directory-files (ias/org-concat-filename-to-org-directory "projects/active") t "org$")
-	 (directory-files (ias/org-concat-filename-to-org-directory "projects/areas") t "org$")
-	 (directory-files (ias/org-concat-filename-to-org-directory "agenda") t "org$")))
+	 (directory-files (ias--org-concat-filename-to-org-directory "projects/active") t "org$")
+	 (directory-files (ias--org-concat-filename-to-org-directory "projects/areas") t "org$")
+	 (directory-files (ias--org-concat-filename-to-org-directory "agenda") t "org$")))
 
-(setq org-default-notes-file (ias/org-concat-filename-to-org-directory "projects/agenda/inbox.org"))
+(setq org-default-notes-file (ias--org-concat-filename-to-org-directory "projects/agenda/inbox.org"))
 
 (setq ias/org-capture-reserved-keys '("C" "q"))
 
 ;; Capture templates
 
 (setq org-capture-templates
-       `(
-	 ("-" "\n\n--- Agenda ---")
-	 ("i" "General Todo" entry
-          (file ,(ias/org-concat-filename-to-org-directory "agenda/inbox.org"))
-          "* TODO [#B] %?\n:Created: %T\n ")
+      `(
+	("-" "\n\n--- Agenda ---")
+	("i" "General Todo" entry
+         (file ,(ias--org-concat-filename-to-org-directory "agenda/inbox.org"))
+         "* TODO [#B] %?\n:Created: %T\n ")
 
-	 ("m" "Meeting" entry
-	  (file+olp+datetree ,(ias/org-concat-filename-to-org-directory "agenda/meetings.org"))
-          "* %? :meeting:%^g \n:Created: %T\n** Attendees\n*** \n** Notes\n** Action Items\n*** TODO [#A] "
-          :tree-type week
-          :clock-in t
-          :clock-resume t
-          :empty-lines 0)
+	("m" "Meeting" entry
+	 (file+olp+datetree ,(ias--org-concat-filename-to-org-directory "agenda/meetings.org"))
+         "* %? :meeting:%^g \n:Created: %T\n** Attendees\n*** \n** Notes\n** Action Items\n*** TODO [#A] "
+         :tree-type week
+         :clock-in t
+         :clock-resume t
+         :empty-lines 0)
 
-	 ;; Journaling related
-	 ("-" "\n\n--- Journaling ---")
-         ("1" "Diary Journal" entry
-          (file+olp+datetree ,(ias/org-concat-filename-to-org-directory "journal/diary.org"))
-	  (file ,(ias/org-concat-filename-to-relative-config-directory "capture-templates/daily-capture-template.org"))
-	  :clock-in t
-	  :clock-resume t)
+	;; Journaling related
+	("-" "\n\n--- Journaling ---")
+        ("1" "Diary Journal" entry
+         (file+olp+datetree ,(ias--org-concat-filename-to-org-directory "journal/diary.org"))
+	 (file ,(ias/org-concat-filename-to-relative-config-directory "capture-templates/daily-capture-template.org"))
+	 :clock-in t
+	 :clock-resume t)
 
-	 ("2" "Weekly" entry
-          (file+olp+datetree ,(ias/org-concat-filename-to-org-directory "planning/weekly.org"))
-          (file ,(ias/org-concat-filename-to-relative-config-directory "capture-templates/weekly-capture-template.org"))
-	  :tree-type week
-	  :time-prompt t
-	  :clock-in t
-	  :clock-resume t)
+	("2" "Weekly" entry
+         (file+olp+datetree ,(ias--org-concat-filename-to-org-directory "planning/weekly.org"))
+         (file ,(ias/org-concat-filename-to-relative-config-directory "capture-templates/weekly-capture-template.org"))
+	 :tree-type week
+	 :time-prompt t
+	 :clock-in t
+	 :clock-resume t)
 
-	 ("3" "Monthly" entry
-	  (file+olp+datetree ,(ias/org-concat-filename-to-org-directory "planning/monthly.org"))
-          (file ,(ias/org-concat-filename-to-relative-config-directory "capture-templates/monthly-capture-template.org"))
-	  :tree-type month
-	  :time-prompt t
-	  :clock-in t
-	  :clock-resume t)
+	("3" "Monthly" entry
+	 (file+olp+datetree ,(ias--org-concat-filename-to-org-directory "planning/monthly.org"))
+         (file ,(ias/org-concat-filename-to-relative-config-directory "capture-templates/monthly-capture-template.org"))
+	 :tree-type month
+	 :time-prompt t
+	 :clock-in t
+	 :clock-resume t)
 
-	 ("4" "Quarterly" entry
-          (file+olp ,(ias/org-concat-filename-to-org-directory "planning/quarterly.org")
-		    ,(format-time-string "%Y")
-		    ,(ias/get-quarter-string))
-          (file ,(ias/org-concat-filename-to-relative-config-directory "capture-templates/quarterly-capture-template.org"))
-	  :clock-in t
-	  :clock-resume t)
+	("4" "Quarterly" entry
+         (file+olp ,(ias--org-concat-filename-to-org-directory "planning/quarterly.org")
+		   ,(format-time-string "%Y")
+		   ,(ias/get-quarter-string))
+         (file ,(ias/org-concat-filename-to-relative-config-directory "capture-templates/quarterly-capture-template.org"))
+	 :clock-in t
+	 :clock-resume t)
 
-	 ("5" "Yearly" entry
-          (file+olp ,(ias/org-concat-filename-to-org-directory "planning/yearly.org") (format-time-string "%Y"))
-          (file ,(ias/org-concat-filename-to-relative-config-directory "capture-templates/yearly-capture-template.org"))
-	  :clock-in t
-	  :clock-resume t)
+	("5" "Yearly" entry
+         (file+olp ,(ias--org-concat-filename-to-org-directory "planning/yearly.org") (format-time-string "%Y"))
+         (file ,(ias/org-concat-filename-to-relative-config-directory "capture-templates/yearly-capture-template.org"))
+	 :clock-in t
+	 :clock-resume t)
 
-	 ("6" "Finances" entry
-          (file+olp+datetree (ias/org-concat-filename-to-org-directory "journal/finances.org"))
-          "* %U %?\n "
-	  :clock-in t
-	  :clock-resume t)
+	("6" "Finances" entry
+         (file+olp+datetree (ias--org-concat-filename-to-org-directory "journal/finances.org"))
+         "* %U %?\n "
+	 :clock-in t
+	 :clock-resume t)
 
-	 ;; Project capture templates
-	 ("-" "\n\n--- Projects ---")
-	 ,@(ias/org-capture-get-project-capture-templates (directory-files (ias/org-concat-filename-to-org-directory "projects/active") t "org$"))
+	;; Project capture templates
+	("-" "\n\n--- Projects ---")
+	,@(ias/org-capture-get-project-capture-templates (directory-files (ias--org-concat-filename-to-org-directory "projects/active") t "org$"))
 
-	 ("-" "\n\n--- Areas ---")
-	 ,@(ias/org-capture-get-project-capture-templates (directory-files (ias/org-concat-filename-to-org-directory "projects/areas") t "org$"))))
+	("-" "\n\n--- Areas ---")
+	,@(ias/org-capture-get-project-capture-templates (directory-files (ias--org-concat-filename-to-org-directory "projects/areas") t "org$"))))
 
 (setq ias/org-capture-reserved-keys '("C" "q"))
 
@@ -212,50 +213,122 @@ If that letter is already picked, will try with the next letter."
 (use-package org-super-agenda)
 (org-super-agenda-mode 1)
 
-(setq org-agenda-custom-commands
-      '(
-        ("d" "Day - Startup View"
-         ((agenda "" ((org-agenda-span 'day)
-                      (org-agenda-skip-scheduled-if-done t)
-                      (org-agenda-skip-deadline-if-done t)
-                      ;; (org-super-agenda-groups
-                      ;;  '((:name "Today" :time-grid t :date today :order 1)))
-		      ))
-          (alltodo#1=""  ((org-agenda-files (directory-files (ias/org-concat-filename-to-org-directory "projects/active") t "org$"))
-			  (org-agenda-overriding-header "=== Active Projects ===")
-			  (org-agenda-prefix-format " ")
-			  (org-agenda-todo-keyword-format "%-10s")
-                          (org-super-agenda-groups
-                           '((:auto-category t)))))
-          (tags-todo "recurrent" ((org-agenda-overriding-header "=== Recurrent Tasks ===")))
-	  (tags "CLOSED>=\"<today>\""
-                ((org-agenda-overriding-header "\nCompleted today\n")))
-	  ))
+(setq org-agenda-prefix-format
+      '((agenda . " %i %-12:c%?-12t% s")
+	(todo . " ")
+	(tags . " %i %-12:c")
+	(search . " %i %-12:c")))
 
-        ("w" "Week - Planning View"
+(setq org-agenda-todo-keyword-format "%-12s")
+
+(defvar ias--agenda-active-projects
+  (lambda ()
+    (list
+     'alltodo
+     ""
+     `((org-agenda-files (directory-files (ias--org-concat-filename-to-org-directory "projects/active")
+					  t "org$"))
+       (org-agenda-overriding-header "=== Active Projects ===")
+       (org-super-agenda-groups '((:auto-category t)))))))
+
+(defvar ias--agenda-areas
+  (lambda ()
+    (list
+     'alltodo
+     ""
+     `((org-agenda-files (directory-files (ias--org-concat-filename-to-org-directory "projects/areas")
+					  t "org$"))
+       (org-agenda-overriding-header "=== Areas ===")
+       (org-super-agenda-groups '((:auto-category t)))))))
+
+(defvar ias--agenda-inbox
+  (lambda ()
+    (list
+     'alltodo
+     ""
+     `((org-agenda-files (list (ias--org-concat-filename-to-org-directory "agenda/inbox.org")))
+       (org-agenda-overriding-header "=== Inbox ===")))))
+
+(defvar ias--agenda-recurring
+  (lambda ()
+    (list
+     'alltodo
+     ""
+     `((org-agenda-files (list (ias--org-concat-filename-to-org-directory "agenda/recurring.org")))
+       (org-agenda-overriding-header "=== Recurring ===")
+       (org-agenda-skip-function 'ias--recurrent-relevant-p)))))
+
+(defun ias--recurrent-relevant-p ()
+  "Skip recurrent tasks that are not scheduled/deadlined in the past or next 14 days."
+  (let* ((deadline (org-get-deadline-time (point)))
+         (scheduled (org-get-scheduled-time (point)))
+         (now (current-time))
+         (future-limit (time-add (current-time) (* 14 24 60 60)))
+	 (timestamp (or deadline scheduled)))
+    (if (and timestamp
+             (or (time-less-p timestamp future-limit)      ; within next 2 weeks
+                 (time-less-p timestamp now)))             ; or in the past (overdue)
+        nil				; keep the entry
+      t)))				; skip the entry
+  
+(setq org-agenda-custom-commands
+      `(("d" "Day - Daily overview"
+         ((agenda "" ((org-agenda-span 'day)
+		      (org-agenda-overriding-header "=== Daily Agenda ===")))
+
+          (alltodo "" ((org-agenda-files (list (ias--org-concat-filename-to-org-directory "agenda/inbox.org")))
+		       (org-agenda-overriding-header "=== Inbox ===")))
+
+          (alltodo "" ((org-agenda-files (directory-files (ias--org-concat-filename-to-org-directory "projects/active") t "org$"))
+			(org-agenda-overriding-header "=== Active Projects ===")
+			(org-super-agenda-groups '((:auto-category t)))))
+	  
+          (alltodo "" ((org-agenda-files (list (ias--org-concat-filename-to-org-directory "agenda/recurring.org")))
+		       (org-agenda-overriding-header "=== Recurrent Tasks ===")))))
+
+	("D" "Day - Daily Review"
+         ((agenda "" ((org-agenda-span 'day)
+		      (org-agenda-overriding-header "=== Daily Agenda ===")))
+
+	  ,(funcall ias--agenda-inbox)
+
+	  (tags "CLOSED>=\"<today>\""
+		((org-agenda-overriding-header "=== Completed today ===")
+		 (org-agenda-prefix-format " ")
+		 (org-super-agenda-groups '((:auto-category t)))))))
+
+	("w" "Week - Weekly overview"
          ((agenda "" ((org-agenda-span 'week)))
-          (tags-todo "active" ((org-agenda-overriding-header "=== Active Projects ===")
-                               (org-super-agenda-groups
-                                '((:auto-category t)))))
-          (tags-todo "recurrent" ((org-agenda-overriding-header "=== Recurrent Tasks ===")))
-          (tags-todo "area" ((org-agenda-overriding-header "=== Areas ===")))))
-        
-        ;; === Quick TODO Lists ===
-        ("f" "Active Projects (Grouped by File)"
-         tags-todo "active"
-         ((org-agenda-overriding-header "=== Active Projects ===")
-          (org-super-agenda-groups '((:auto-category t)))))
-        ("g" "Areas"           tags-todo "area")
-        ("r" "Recurrent Tasks" tags-todo "recurrent")
-        ("s" "All Tasks"       tags-todo "active|area|recurrent")
+	  ,(funcall ias--agenda-inbox)
+	  ,(funcall ias--agenda-areas)
+	  ,(funcall ias--agenda-recurring)
+	  ,(funcall ias--agenda-active-projects)))
+	
+	("W" "Week - Weekly review"
+         ((agenda "" ((org-agenda-span 'week)))
+          ,(funcall ias--agenda-inbox)
+	  (tags "CLOSED>=\"<-7d>\""
+		((org-agenda-overriding-header "=== Completed this week ===")
+		 (org-agenda-prefix-format " ")
+		 (org-super-agenda-groups '((:auto-category t)))))))
+
+	;; === Quick TODO Lists ===
+	("f" "Active Projects" (,(funcall ias--agenda-active-projects)))
+	("g" "Areas"           (,(funcall ias--agenda-areas)))
+	("i" "Inbox"	       (,(funcall ias--agenda-inbox)))
+	("r" "Recurrent Tasks" (,(funcall ias--agenda-recurring)))
+	("s" "All Tasks"
+	 (,(funcall ias--agenda-inbox)
+	  ,(funcall ias--agenda-active-projects)
+	  ,(funcall ias--agenda-areas)
+	  ,(funcall ias--agenda-recurring)))
 	("t" "List of all TODO entries"
-	 ((alltodo #1# ((org-agenda-prefix-format " ")
-			(org-super-agenda-groups '((:auto-category t)))))))
+	 ((alltodo "" ((org-super-agenda-groups '((:auto-category t)))))))
 	("n" "Agenda and all TODOs"
 	 ((agenda #1="")
 	  (alltodo #1# ((org-agenda-prefix-format " ")
 			(org-super-agenda-groups '((:auto-category t)))))))
-        ))
+	))
 
 ;; (setq org-agenda-hide-tags-regexp ".")
 ;;; Other configurations
@@ -278,4 +351,4 @@ If that letter is already picked, will try with the next letter."
 
 ;; Provide
 (provide 'isac-emacs-org)
-;;; isac-emacs-org.el ends 
+;;; isac-emacs-org.el ends here
