@@ -109,7 +109,7 @@ If that letter is already picked, will try with the next letter."
 
 (setq org-default-notes-file (ias--org-concat-filename-to-org-directory "projects/agenda/inbox.org"))
 
-(setq ias/org-capture-reserved-keys '("C" "q"))
+(setq ias/org-capture-reserved-keys '("C" "q" "m"))
 
 ;; Capture templates
 
@@ -172,6 +172,13 @@ If that letter is already picked, will try with the next letter."
 	 :clock-in t
 	 :clock-resume t)
 
+	(when AT-WORK
+	  ("7" "Monitoring" entry
+	   (file+olp+datetree (ias/org-concat-filename-to-org-directory "journal/monitoring-journal.org"))
+           "* %U %?\n "
+	   :clock-in t
+	   :clock-resume t))
+
 	;; Project capture templates
 	("-" "\n\n--- Projects ---")
 	,@(ias/org-capture-get-project-capture-templates (directory-files (ias--org-concat-filename-to-org-directory "projects/active") t "org$"))
@@ -229,7 +236,7 @@ If that letter is already picked, will try with the next letter."
      `((org-agenda-files (directory-files (ias--org-concat-filename-to-org-directory "projects/active")
 					  t "org$"))
        (org-agenda-overriding-header "=== Active Projects ===")
-       (org-super-agenda-groups '((:auto-category t)))))))
+       (org-super-agenda-groups '((:auto-ias-category t)))))))
 
 (defvar ias--agenda-areas
   (lambda ()
@@ -239,7 +246,7 @@ If that letter is already picked, will try with the next letter."
      `((org-agenda-files (directory-files (ias--org-concat-filename-to-org-directory "projects/areas")
 					  t "org$"))
        (org-agenda-overriding-header "=== Areas ===")
-       (org-super-agenda-groups '((:auto-category t)))))))
+       (org-super-agenda-groups '((:auto-ias-category t)))))))
 
 (defvar ias--agenda-inbox
   (lambda ()
@@ -252,25 +259,19 @@ If that letter is already picked, will try with the next letter."
 (defvar ias--agenda-recurring
   (lambda ()
     (list
-     'alltodo
+     'agenda
      ""
      `((org-agenda-files (list (ias--org-concat-filename-to-org-directory "agenda/recurring.org")))
        (org-agenda-overriding-header "=== Recurring ===")
-       (org-agenda-skip-function 'ias--recurrent-relevant-p)))))
+       (org-agenda-span 'fortnight)
+       (org-agenda-prefix-format "%?-12t%s")
+       ))))
 
-(defun ias--recurrent-relevant-p ()
-  "Skip recurrent tasks that are not scheduled/deadlined in the past or next 14 days."
-  (let* ((deadline (org-get-deadline-time (point)))
-         (scheduled (org-get-scheduled-time (point)))
-         (now (current-time))
-         (future-limit (time-add (current-time) (* 14 24 60 60)))
-	 (timestamp (or deadline scheduled)))
-    (if (and timestamp
-             (or (time-less-p timestamp future-limit)      ; within next 2 weeks
-                 (time-less-p timestamp now)))             ; or in the past (overdue)
-        nil				; keep the entry
-      t)))				; skip the entry
-  
+(org-super-agenda--def-auto-group ias-category "their org-category property"
+  :key-form (org-super-agenda--when-with-marker-buffer (org-super-agenda--get-marker item)
+              (org-get-category))
+  :header-form (capitalize key))
+
 (setq org-agenda-custom-commands
       `(("d" "Day - Daily overview"
          ((agenda "" ((org-agenda-span 'day)
@@ -280,11 +281,13 @@ If that letter is already picked, will try with the next letter."
 		       (org-agenda-overriding-header "=== Inbox ===")))
 
           (alltodo "" ((org-agenda-files (directory-files (ias--org-concat-filename-to-org-directory "projects/active") t "org$"))
-			(org-agenda-overriding-header "=== Active Projects ===")
-			(org-super-agenda-groups '((:auto-category t)))))
+		       (org-agenda-overriding-header "=== Active Projects ===")
+		       (org-super-agenda-groups '((:auto-ias-category t)))))
 	  
-          (alltodo "" ((org-agenda-files (list (ias--org-concat-filename-to-org-directory "agenda/recurring.org")))
-		       (org-agenda-overriding-header "=== Recurrent Tasks ===")))))
+          (agenda "" ((org-agenda-files (list (ias--org-concat-filename-to-org-directory "agenda/recurring.org")))
+		      (org-agenda-span 'fortnight)
+		      (org-agenda-prefix-format " %?-12t% s")
+		      (org-agenda-overriding-header "=== Recurrent Tasks Next 2 weeks ===")))))
 
 	("D" "Day - Daily Review"
          ((agenda "" ((org-agenda-span 'day)
@@ -295,7 +298,7 @@ If that letter is already picked, will try with the next letter."
 	  (tags "CLOSED>=\"<today>\""
 		((org-agenda-overriding-header "=== Completed today ===")
 		 (org-agenda-prefix-format " ")
-		 (org-super-agenda-groups '((:auto-category t)))))))
+		 (org-super-agenda-groups '((:auto-ias-category t)))))))
 
 	("w" "Week - Weekly overview"
          ((agenda "" ((org-agenda-span 'week)))
@@ -310,7 +313,7 @@ If that letter is already picked, will try with the next letter."
 	  (tags "CLOSED>=\"<-7d>\""
 		((org-agenda-overriding-header "=== Completed this week ===")
 		 (org-agenda-prefix-format " ")
-		 (org-super-agenda-groups '((:auto-category t)))))))
+		 (org-super-agenda-groups '((:auto-ias-category t)))))))
 
 	;; === Quick TODO Lists ===
 	("f" "Active Projects" (,(funcall ias--agenda-active-projects)))
@@ -323,11 +326,11 @@ If that letter is already picked, will try with the next letter."
 	  ,(funcall ias--agenda-areas)
 	  ,(funcall ias--agenda-recurring)))
 	("t" "List of all TODO entries"
-	 ((alltodo "" ((org-super-agenda-groups '((:auto-category t)))))))
+	 ((alltodo "" ((org-super-agenda-groups '((:auto-ias-category t)))))))
 	("n" "Agenda and all TODOs"
 	 ((agenda #1="")
 	  (alltodo #1# ((org-agenda-prefix-format " ")
-			(org-super-agenda-groups '((:auto-category t)))))))
+			(org-super-agenda-groups '((:auto-ias-category t)))))))
 	))
 
 ;; (setq org-agenda-hide-tags-regexp ".")
