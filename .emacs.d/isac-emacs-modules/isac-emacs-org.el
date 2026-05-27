@@ -172,8 +172,8 @@ If that letter is already picked, will try with the next letter."
 	 :clock-in t
 	 :clock-resume t)
 
-	(when AT-WORK
-	  ("7" "Monitoring" entry
+	,(when AT-WORK
+	  `("7" "Monitoring" entry
 	   (file+olp+datetree (ias/org-concat-filename-to-org-directory "journal/monitoring-journal.org"))
            "* %U %?\n "
 	   :clock-in t
