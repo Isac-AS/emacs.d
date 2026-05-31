@@ -6,7 +6,7 @@
 - [ ] Goal 3: %^{Goal 3}
 
 *** Outcomes
-Goal 1 -> 
+Goal 1 -> %?
 Goal 2 -> 
 Goal 3 -> 
 

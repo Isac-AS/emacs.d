@@ -1,0 +1,11 @@
+* %^{title}
+** Summary table
+| Title  | %^{title} |
+| Rating | %^{0-10}  |
+| Start  | %u        |
+| End    |           |
+
+** Review
+%?
+** Notes
+/Ideas, thoughts or other to be written throughout the consumption./

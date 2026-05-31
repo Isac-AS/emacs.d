@@ -1,0 +1,74 @@
+#+title:      %^{title}
+#+date:       %U
+#+filetags:   :project:%^{tags}
+
+* %^{project-name} definition
+For more context on the template:
+[[denote:20260422T185500][Before starting a project (GPS)]]
+
+** Goals
+*** What?
+#+begin_quote
+In a matter as specific as possible, describe the goal.
+#+end_quote
+%?
+
+*** Why?
+#+begin_quote
+Why do I care about achieving it? What are the reasons?
+#+end_quote
+
+*** Anti-goals
+#+begin_quote
+What are the things I want to avoid reaching the goal? What
+constraints should I put on?
+Often examples include stuff like not working more than 40 hours per
+week.
+#+end_quote
+
+** Plan
+*** 3-5 Major moves to get there
+
+*** Realistic percentage?
+#+begin_quote
+- Is the plan realistic in theory?
+  If I were to follow the moves/plan, would they get me to the goal
+  (in theory)?
+- In practice, will I actually follow the plan?
+  *What are the chances of me following the plan?*
+  ^^^ Very important (suggested to use AI to help set a plan)
+#+end_quote
+
+*** Crystal ball
+#+begin_quote
+Project into the future and think about a timeline the goal was not
+achieved, what are the top 3 reasons to why the /plan did not work/ ||
+/did I not follow the plan/?
+Take this into account and plan for it.
+#+end_quote
+
+** System
+*** Tracking
+#+begin_quote
+People that monitor the progress are "way more likely to achieve it".
+The point here is "how can I track the progress?"
+#+end_quote
+
+*** Reminders
+#+begin_quote
+How will you remind yourself of your goal and of your plan?
+Some of the actions he suggests are:
+1. Daily journaling
+2. Weekly review
+3. Time blocking
+#+end_quote
+
+* Tasks
+** Inbox
+
+
+* Documentation
+/This section contains information about the things learned throughout
+the development of the project. Can link to notes./
+
+* IMPORTANT: REMEMBER TO CHANGE THE FILE NAME

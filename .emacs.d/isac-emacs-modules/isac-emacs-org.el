@@ -109,10 +109,25 @@ If that letter is already picked, will try with the next letter."
 
 (setq org-default-notes-file (ias--org-concat-filename-to-org-directory "projects/agenda/inbox.org"))
 
-(setq ias/org-capture-reserved-keys '("C" "q" "m"))
-
 ;; Capture templates
 
+(defun ias--org-capture-new-project-file-name ()
+  "Ask for a file name for the new project."
+  (let* ((fpath (read-file-name "Project name (remember to add .org): "
+				(concat org-directory "projects/todo/")
+				nil nil nil)))
+    (find-file fpath)
+    (goto-char (point-min))))
+
+(defun ias--org-capture-determine-media-file ()
+  "Prompt user to choose media type to determine where to file."
+  (let* ((keywords '("games" "books" "anime" "manga" "films"))
+	 (choice (completing-read "Type of media: " keywords nil t))
+	 (filename (expand-file-name (concat org-directory "denote/media/" choice ".org"))))
+    (find-file filename)
+    (goto-char (point-max))))
+
+(setq ias/org-capture-reserved-keys '("C" "q" "m" "n" "p"))
 (setq org-capture-templates
       `(
 	("-" "\n\n--- Agenda ---")
@@ -173,20 +188,30 @@ If that letter is already picked, will try with the next letter."
 	 :clock-resume t)
 
 	,(when AT-WORK
-	  `("7" "Monitoring" entry
-	   (file+olp+datetree (ias/org-concat-filename-to-org-directory "journal/monitoring-journal.org"))
-           "* %U %?\n "
-	   :clock-in t
-	   :clock-resume t))
-
+	   `("7" "Monitoring" entry
+	     (file+olp+datetree (ias--org-concat-filename-to-org-directory "journal/monitoring-journal.org"))
+             "* %U %?\n "
+	     :clock-in t
+	     :clock-resume t))
+	
 	;; Project capture templates
 	("-" "\n\n--- Projects ---")
+	("n" "New Project" plain
+         (function ias--org-capture-new-project-file-name)
+	 (file ,(ias/org-concat-filename-to-relative-config-directory "capture-templates/gps-capture-template.org"))
+	 :jump-to-capture t)
+
 	,@(ias/org-capture-get-project-capture-templates (directory-files (ias--org-concat-filename-to-org-directory "projects/active") t "org$"))
 
 	("-" "\n\n--- Areas ---")
-	,@(ias/org-capture-get-project-capture-templates (directory-files (ias--org-concat-filename-to-org-directory "projects/areas") t "org$"))))
+	,@(ias/org-capture-get-project-capture-templates (directory-files (ias--org-concat-filename-to-org-directory "projects/areas") t "org$"))
+	
+	("-" "\n\n--- Media ---")
+	("p" "New media" plain
+         (function ias--org-capture-determine-media-file)
+	 (file ,(ias/org-concat-filename-to-relative-config-directory "capture-templates/media-capture-template.org")))))
 
-(setq ias/org-capture-reserved-keys '("C" "q"))
+(setq ias/org-capture-reserved-keys '("C" "q" "m" "n" "p"))
 
 ;; Refile targets
 (setq org-refile-targets
@@ -275,6 +300,8 @@ If that letter is already picked, will try with the next letter."
 (setq org-agenda-custom-commands
       `(("d" "Day - Daily overview"
          ((agenda "" ((org-agenda-span 'day)
+		      (org-agenda-prefix-format " ")
+		      (org-super-agenda-groups '((:auto-ias-category t)))
 		      (org-agenda-overriding-header "=== Daily Agenda ===")))
 
           (alltodo "" ((org-agenda-files (list (ias--org-concat-filename-to-org-directory "agenda/inbox.org")))
@@ -291,6 +318,7 @@ If that letter is already picked, will try with the next letter."
 
 	("D" "Day - Daily Review"
          ((agenda "" ((org-agenda-span 'day)
+		      (org-agenda-start-with-log-mode t)
 		      (org-agenda-overriding-header "=== Daily Agenda ===")))
 
 	  ,(funcall ias--agenda-inbox)
@@ -301,17 +329,30 @@ If that letter is already picked, will try with the next letter."
 		 (org-super-agenda-groups '((:auto-ias-category t)))))))
 
 	("w" "Week - Weekly overview"
-         ((agenda "" ((org-agenda-span 'week)))
+         ((agenda "" ((org-agenda-span 'week)
+		      (org-agenda-prefix-format " ")
+		      (org-super-agenda-groups '((:auto-ias-category t)))))
 	  ,(funcall ias--agenda-inbox)
 	  ,(funcall ias--agenda-areas)
-	  ,(funcall ias--agenda-recurring)
-	  ,(funcall ias--agenda-active-projects)))
+	  ,(funcall ias--agenda-active-projects)
+	  ,(funcall ias--agenda-recurring)))
 	
 	("W" "Week - Weekly review"
-         ((agenda "" ((org-agenda-span 'week)))
+         ((agenda "" ((org-agenda-span 'week)
+		      (org-agenda-start-with-log-mode t)))
           ,(funcall ias--agenda-inbox)
 	  (tags "CLOSED>=\"<-7d>\""
 		((org-agenda-overriding-header "=== Completed this week ===")
+		 (org-agenda-prefix-format " ")
+		 (org-super-agenda-groups '((:auto-ias-category t)))))))
+
+	("m" "Month - Monthly review"
+         ((agenda "" ((org-agenda-span 'month)
+		      (org-agenda-start-day "01")
+		      (org-agenda-start-with-log-mode t)))
+          ,(funcall ias--agenda-inbox)
+	  (tags "CLOSED>=\"<-1m>\""
+		((org-agenda-overriding-header "=== Completed this month ===")
 		 (org-agenda-prefix-format " ")
 		 (org-super-agenda-groups '((:auto-ias-category t)))))))
 
