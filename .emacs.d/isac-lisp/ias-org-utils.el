@@ -29,6 +29,13 @@ By default an `ALIST' is returned.  If AS-PLIST is t a `PLIST' is returned."
 	(apply #'append results)
       results)))
 
+(defun ias-org-utils-get-properties-from-property-drawer-plist (property-drawer)
+  "Extract properties from PROPERTY-DRAWER AS-PLIST."
+  (let ((results (org-element-map property-drawer 'node-property
+                   (lambda (prop)
+		     (ias-org-utils--node-property-to-pair prop 'plist)))))
+    (apply #'append results)))
+
 ;; Table parsing
 (defun ias-org-utils--clean-cell (cell)
   "Clean CELL property string."
@@ -90,7 +97,7 @@ OPTIONS is a plist with the following keys:
 		the first plist."
   (unless data
     (insert "No data\n\n")
-    (return))
+    (error "No data"))
 
   (let* ((raw-cols (plist-get options :columns))
          (columns (if raw-cols

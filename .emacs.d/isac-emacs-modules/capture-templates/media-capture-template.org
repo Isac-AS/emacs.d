@@ -1,9 +1,11 @@
 * %^{title}
-** Summary table
-| Title  | %^{title} |
-| Rating | %^{0-10}  |
-| Start  | %u        |
-| End    |           |
+:PROPERTIES:
+:TITLE: %^{title}
+:RATING: %^{0-10}
+:START-TIME: %u
+:END-TIME: 
+:MEDIA-TYPE: %^{media-type}
+:END:
 
 ** Review
 %?

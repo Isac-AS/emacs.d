@@ -6,6 +6,7 @@
 
 (require 'org-element)
 (require 'json)
+(require 'ias-org-utils)
 
 (defgroup ias-routine nil
   "Parse routines defined in Org file into structure data/JSON."
@@ -88,9 +89,9 @@ A routine buffer HEADLINE is a parse tree (for example, returned by
 `org-element-map') and is expected to contain a property drawer and
 a table.
 
-Return a list of property lists. Each property list has one
+Return a list of property lists.  Each property list has one
 property for each value pair found in the property drawer and one
-property for the table. That table property is itself a list of
+property for the table.  That table property is itself a list of
 property lists, each representing a row of the table with the key
 value being the name of the column./"
   (let ((properties (org-element-map headline 'property-drawer

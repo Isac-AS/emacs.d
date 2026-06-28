@@ -26,14 +26,14 @@
 
 ** Review
 *** ⏪ Last Quarter's Post-Mortem
-- [ ] *The Score:** (What % of OKRs were hit?)
-- [ ] *The "Why":** (If I missed a goal, was it lack of effort, bad planning, or life interference?)
-- [ ] *The Pivot:** (What am I stopping this quarter to make room for the new OKRs?)
+****  The Score (What % of OKRs were hit?)
+****  The "Why" (If I missed a goal, was it lack of effort, bad planning, or life interference?)
+****  The Pivot (What am I stopping this quarter to make room for the new OKRs?)
 
 *** 🧠 Strategic Reflection
-- /"If I could only accomplish ONE objective this quarter to be satisfied, which is it?"/
-- /"What is my 'Burnout Buffer'? (How will I rest?)"/
-- /"What are the 20% of activities producing 80% of my results?"/
+**** "If I could only accomplish ONE objective this quarter to be satisfied, which is it?"/
+**** "What is my 'Burnout Buffer'? (How will I rest?)"
+**** "What are the 20% of activities producing 80% of my results?"
 
 *** 🗓️ 12-Week Horizon
 - [ ] Month 1 Focus:

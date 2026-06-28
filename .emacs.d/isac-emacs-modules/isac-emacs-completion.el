@@ -80,6 +80,9 @@
   :init
   (global-corfu-mode))
 
+(add-hook 'plantuml-mode-hook
+          (lambda ()
+            (corfu-mode -1)))
 ;; Persist history over Emacs restarts. Vertico sorts by history position.
 (use-package savehist
   :init

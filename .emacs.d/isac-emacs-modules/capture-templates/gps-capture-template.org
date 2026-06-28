@@ -3,6 +3,12 @@
 #+filetags:   :project:%^{tags}
 
 * %^{project-name} definition
+:PROPERTIES:
+:PROJECT-START:
+:PROJECT-END:
+:ESTIMATION:
+:REAL-TIME:
+:END:
 For more context on the template:
 [[denote:20260422T185500][Before starting a project (GPS)]]
 
@@ -71,4 +77,3 @@ Some of the actions he suggests are:
 /This section contains information about the things learned throughout
 the development of the project. Can link to notes./
 
-* IMPORTANT: REMEMBER TO CHANGE THE FILE NAME

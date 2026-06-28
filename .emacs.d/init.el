@@ -48,14 +48,17 @@
 
 ;; Misc
 (require 'isac-emacs-keyfreq)
+(require 'ias-plantuml)
 
 ;; Lang
 ;;(require 'isac-emacs-treesit)
 
 ;; Custom stuff
-(require 'isac-emacs-scroll)
-(require 'isac-emacs-music)
-(require 'ias-routine)
+(dolist (file (directory-files (expand-file-name "isac-lisp" 
+						 user-emacs-directory)
+			       nil
+			       ".el$"))
+  (require `,(intern (file-name-base file))))
 
 (keymap-set global-map "C-v" #'isac-scroll-half-page-down)
 (keymap-set global-map "M-v" #'isac-scroll-half-page-up)

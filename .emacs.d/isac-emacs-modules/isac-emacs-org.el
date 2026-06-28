@@ -121,7 +121,7 @@ If that letter is already picked, will try with the next letter."
 
 (defun ias--org-capture-determine-media-file ()
   "Prompt user to choose media type to determine where to file."
-  (let* ((keywords '("games" "books" "anime" "manga" "films"))
+  (let* ((keywords '("games" "books" "anime" "manga" "films" "articles" "blogs" "papers" "wiki-entries"))
 	 (choice (completing-read "Type of media: " keywords nil t))
 	 (filename (expand-file-name (concat org-directory "denote/media/" choice ".org"))))
     (find-file filename)
@@ -300,7 +300,8 @@ If that letter is already picked, will try with the next letter."
 (setq org-agenda-custom-commands
       `(("d" "Day - Daily overview"
          ((agenda "" ((org-agenda-span 'day)
-		      (org-agenda-prefix-format " ")
+		      (org-agenda-prefix-format " %?-12t% s")
+		      (org-agenda-time-grid nil)
 		      (org-super-agenda-groups '((:auto-ias-category t)))
 		      (org-agenda-overriding-header "=== Daily Agenda ===")))
 
@@ -309,6 +310,10 @@ If that letter is already picked, will try with the next letter."
 
           (alltodo "" ((org-agenda-files (directory-files (ias--org-concat-filename-to-org-directory "projects/active") t "org$"))
 		       (org-agenda-overriding-header "=== Active Projects ===")
+		       (org-super-agenda-groups '((:auto-ias-category t)))))
+
+          (alltodo "" ((org-agenda-files (directory-files (ias--org-concat-filename-to-org-directory "projects/areas") t "org$"))
+		       (org-agenda-overriding-header "=== Areas ===")
 		       (org-super-agenda-groups '((:auto-ias-category t)))))
 	  
           (agenda "" ((org-agenda-files (list (ias--org-concat-filename-to-org-directory "agenda/recurring.org")))
@@ -331,6 +336,7 @@ If that letter is already picked, will try with the next letter."
 	("w" "Week - Weekly overview"
          ((agenda "" ((org-agenda-span 'week)
 		      (org-agenda-prefix-format " ")
+		      (org-agenda-time-grid nil)
 		      (org-super-agenda-groups '((:auto-ias-category t)))))
 	  ,(funcall ias--agenda-inbox)
 	  ,(funcall ias--agenda-areas)

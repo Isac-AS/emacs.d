@@ -20,19 +20,27 @@ Goal 3 ->
 
 *** 🧠 Reflection
 **** Signal vs Noise question
+#+begin_quote
 /"If I could only do one thing this week to make everything else
 easier or unnecessary, what would it be?"/
+#+end_quote
 
 **** Bottleneck Audit
+#+begin_quote
 /"What is the one thing I'm currently avoiding or procrastinating on?"/
 /"Who/What am I waiting for?"/
+#+end_quote
 
 **** Ideal vs Real
+#+begin_quote
 /"Where did my 'Real' schedule deviate most from my 'Ideal' last week,
 and why?"/
+#+end_quote
 
 **** Energy metric
+#+begin_quote
 /How tired am I? (0 not tired-10 very tired)/
+#+end_quote
 
 *** ➰ Usual periodic checks. Anything to say about...?
 **** Media (books read, games played, films watched)
@@ -42,7 +50,13 @@ and why?"/
 **** Financially
 
 **** Exercise
+#+begin_quote
 /Did I do exercise at least 3 days?/
+#+end_quote
 
 **** Relationship related
+#+begin_quote
 /Did I reach out to {family | friends}.../
+#+end_quote
+
+**** How did the week feel (emotionally, tiredness)
