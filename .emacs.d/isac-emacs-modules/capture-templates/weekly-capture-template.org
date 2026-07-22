@@ -53,6 +53,17 @@ and why?"/
 #+begin_quote
 /Did I do exercise at least 3 days?/
 #+end_quote
+|-----------+-------------------|
+| Day       | Activity          |
+|-----------+-------------------|
+| Monday    | Run               |
+| Tuesday   | Run               |
+| Wednesday |                   |
+| Thursday  |                   |
+| Friday    | Work in the lands |
+| Saturday  |                   |
+| Sunday    |                   |
+|-----------+-------------------|
 
 **** Relationship related
 #+begin_quote

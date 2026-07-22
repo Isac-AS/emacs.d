@@ -121,7 +121,7 @@ If that letter is already picked, will try with the next letter."
 
 (defun ias--org-capture-determine-media-file ()
   "Prompt user to choose media type to determine where to file."
-  (let* ((keywords '("games" "books" "anime" "manga" "films" "articles" "blogs" "papers" "wiki-entries"))
+  (let* ((keywords '("games" "books" "anime" "courses" "manga" "films" "articles" "blogs" "papers" "wiki-entries"))
 	 (choice (completing-read "Type of media: " keywords nil t))
 	 (filename (expand-file-name (concat org-directory "denote/media/" choice ".org"))))
     (find-file filename)
